@@ -3,8 +3,9 @@ This file contains a general purpose neural network that can be used for many
 applications
 """
 
-import numpy as np
-import matplotlib.pyplot as plt
+import numpy as np # necessary unless want to rewrite
+import matplotlib.pyplot as plt # only necessary for plot functions
+import json #only necessary for storing/loading weights from file
 
 def sigmoid(x):
     """ This function computes the sigmoid of x"""
@@ -30,6 +31,11 @@ def linearDerivative(x):
     """ This function returns 1"""
     return 1.0
 
+class NeuralNetworkException(Exception):
+    """ General Purpose Exception for class NeuralNetwork"""
+    def __init___(self,message):
+        Exception.__init__(self,message)
+        
 class NeuralNetwork:
     """ General Purpose Neural Network"""
     def __init__(self,layers,activeFn = 'sigmoid'):
@@ -55,7 +61,48 @@ class NeuralNetwork:
             else:
                 weight_matrix = 2*np.random.rand(layers[i-1] + 1, layers[i]) -1
             self.theta.append(weight_matrix)
+
+    def storeWeights(self,filename,comment = 'No Comment'):
+        """Stores Weights in filename.
+            filename (string): ex. 'data.txt'
+            comment (string): message to be stored in file
+        """
+        # Store weights as lists
+        stored_weights = []
+        for i in range(len(self.theta)):
+            stored_weights.append([])
+            for j in range(len(self.theta[i])):
+                stored_weights[i].append([])
+                for value in self.theta[i][j]:
+                    stored_weights[i][j].append(float(value))
+        print(stored_weights)
+        data = {}
+        data['theta'] = stored_weights
+        data['layers'] = self.layers
+        data['comment'] = comment
+        with open(filename, 'w') as outfile:
+            json.dump(data, outfile)
+        return
+    
+    def loadWeights(self,filename):
+        """Loads Weights in filename. Note WILL overwrite layer shape and number.
+            filename (string): ex. 'data.txt'
+        """
+        with open('data.txt') as json_file:  
+            data = json.load(json_file)
             
+        # weight matrices are stored as lists, so turn them into np.arrays
+        self.theta = []
+        for weight_matrix in data['theta']:
+            self.theta.append(np.array(weight_matrix))         
+        self.layers = data['layers']
+        print()
+        print('Weights Loaded.')
+        print('Layers: ' + str(self.layers))
+        print('Comment: ' + str(data['comment']))
+        return
+      
+        
     def trainRandom(self,X,Y,learning_rate=1.0,intervals = 100):
         """Trains the neural networks with a list of input vectors x
            and a list of output vectors Y. Iterates in Random Order.
@@ -152,7 +199,11 @@ class NeuralNetwork:
 
 
 def main():
-    neuralXorTest()
+    #neuralXorTest()
+
+    net = NeuralNetwork([2,2,1])
+    net.storeWeights('data.txt', comment = 'Hi, World')
+    net.loadWeights('data.txt')
 
 def neuralXorTest():
     net = NeuralNetwork([2,2,1],'tanh')
