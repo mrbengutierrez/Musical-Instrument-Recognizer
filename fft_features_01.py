@@ -25,13 +25,13 @@ def plotFFT(filename):
 
 def iterateWavFiles():
     for filename in os.listdir(Training):
-    if filename.endswith(".wav"): 
-        if 'sax' in str(filename):
-            sax_list.append(filename)
-        elif 'vio' in str(filename):
-            vio_list.append(filename)
-        else:
-            raise Exception('Instrument Name not in File')
+        if filename.endswith(".wav"): 
+            if 'sax' in str(filename):
+                sax_list.append(filename)
+            elif 'vio' in str(filename):
+                vio_list.append(filename)
+            else:
+                raise Exception('Instrument Name not in File')
         
     return [sax_list,vio_list]
 
@@ -66,6 +66,8 @@ def trainNet():
     """
     
 def printPlotWav(filename):
+    # Note: this code is borrowed
+    # Note: FFTs are seem to be slow in python
     fs_rate, signal = wavfile.read(filename)
     print ("Frequency sampling", fs_rate)
     len_audio = len(signal.shape)
