@@ -63,7 +63,7 @@ def trainNet():
             Plot
 
         
-    
+    """
     
 def printPlotWav(filename):
     fs_rate, signal = wavfile.read(filename)
