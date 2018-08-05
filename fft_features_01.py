@@ -39,8 +39,17 @@ def trainNet():
     """To Train Instrument Detection
             Initialize a neural Net with 100 - 1000 frequencies as input
 
-            for each audio file, extract fft data, (optional: extract time data)
-            note: it might be good to subsample audiofile data
+            for each audio file ,
+                preprocess: extract full signal
+                            chop up signal (0.25 sec fragments)
+                            high/low/bandpass filter
+                            downsample
+                            (i.e   44100 Hz --> 400 Hz)
+                            make sure signal length is a power of 2
+                                --> 256, 1024, to speed up fft
+            
+                extract fft data, (optional: extract time data)
+                note: it might be good to subsample audiofile data
 
             create a dictionary with corresponding fft and output vector
 
