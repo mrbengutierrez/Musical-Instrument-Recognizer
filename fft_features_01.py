@@ -1,12 +1,17 @@
 import scipy.io.wavfile as wavfile
 import scipy
 import scipy.fftpack
+import scipy.signal
 import numpy as np
 from matplotlib import pyplot as plt
 import os
 import wave
+import audioop
 
-
+class AudioException(Exception):
+    """ General Purpose Exception for class NeuralNetwork"""
+    def __init___(self,message):
+        Exception.__init__(self,message)
 def processFile(filename):
     #fs = sample rate, sound = multichannel sound signal
     fs, sound = wavfile.read(filename) 
@@ -15,10 +20,36 @@ def processFile(filename):
 
     N = len(s1) # num of samples
     Ts = 1/fs #sampletime
-    t_len = Ts*N # total time (sec)
-    print(t_len)
-    print(s1)
-    print(N)
+    T = Ts*N # total time (sec)
+    new_T = 0.2
+    s2 = s1[N//2-int(new_T/2*N):N//2] + s1[N//2:N//2+int(new_T/2*N)]
+    N2 = len(s2) # num of samples
+
+    q = 2 #downsample by factor of 2
+    s3 = scipy.signal.resample(sound, 4096, t=None, axis=0, window=None)
+
+def processFile2(src):
+    src_read = wave.open(src, mode=None)
+    f_in = src_read.getframerate()
+    f_out = 11025 # 11025 =44100/4
+    if f_in<16385:
+        raise AudioException('Sampling rate too small')
+    new_wav = downsampleWav(src,f_in,f_out,src_read.getnchannels(),outchannels=1)
+
+    print(new_wav)
+    
+
+
+def downsampleWav(src, Fin=44100, Fout=11025, inchannels=2, outchannels=1):
+    src_read = wave.open(src, 'r')
+
+    n_frames = src_read.getnframes()
+    data = src_read.readframes(n_frames)
+
+    converted = audioop.ratecv(data, 2, inchannels, Fin, Fout, None)
+    if outchannels == 1 and inchannels>1:
+        converted = audioop.tomono(converted[0], 2, 1, 0)
+    return converted
 
 def processSignal(signal,f_range):
     pass
@@ -147,7 +178,7 @@ def printPlotWav(filename):
 
 def main():
    #plotFFT("sax.wav")
-    processFile('sax.wav')
+    processFile2('sax.wav')
    
 
 if __name__ == '__main__':
