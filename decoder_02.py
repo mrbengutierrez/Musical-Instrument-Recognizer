@@ -1,15 +1,25 @@
 import numpy as np
+import matplotlib as plt
+import scipy
 
 def sigmoid(x):
-    return 1.0/(1+ np.exp(-x))
+    """ This function computes the sigmoid of x"""
+    return 1.0/(1 + np.exp(-x))
 
 def sigmoid_derivative(x):
+    """ This function computes the sigmoid_derivative of x"""
     return x * (1.0 - x)
 
 class NeuralNetwork:
     def __init__(self, x, y):
-        self.input      = x
-        self.weights1   = np.random.rand(self.input.shape[1],4) 
+        """ Initializes the neural network
+            h (list): list of layer lengths, must have length >= 3
+        """
+        self.input = x
+        print('x = '+ str(x))
+        print('x.shape = ' + str(x.shape[1]))
+        self.weights1   = np.random.rand(self.input.shape[1],4)
+        print('self.weights1 = ' + str(self.weights1))
         self.weights2   = np.random.rand(4,1)                 
         self.y          = y
         self.output     = np.zeros(self.y.shape)
