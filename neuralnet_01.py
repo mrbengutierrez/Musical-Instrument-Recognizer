@@ -2,7 +2,7 @@
 This file contains a general purpose neural network that can be used for many
 applications
 
-NOTE: for the activation functions: only sigmoid, tanh, and arctan, sin currently work
+NOTE: Working activation fns: sigmoid, tanh, arctan, sin, gaussian, softplus
 """
 
 import numpy as np # necessary unless want to rewrite
@@ -169,25 +169,26 @@ def softsignDerivative(x): # DOES NOT WORK WITH NN
     """
     return 1.0/(1+abs(x))**2
 
-def gaussian(x): # DOES NOT WORK WITH NN
-    """This function returns the guassian of x"""
+def gaussian(x): 
+    """This function returns the gaussian of x"""
     return np.exp(-x**2)
 
-def gaussianDerivative(x): # DOES NOT WORK WITH NN
+def gaussianDerivative(x): 
     """This function returns the gaussian derivative of x
         (Note: Not Real Derivative)
     """
-    return -2.0*x*np.exp(-x**2)
+    return -2.0*x*(np.sqrt(-np.log(x)))
 
-def softplus(x): # DOES NOT WORK WITH NN
+def softplus(x): 
     """This function returns the softplus of x"""
     return np.log(1+np.exp(x))
 
-def softplusDerivative(x): # DOES NOT WORK WITH NN
+def softplusDerivative(x): 
     """This function returns the softplusDerivative of x
         (Note: Not Real Derivative)
     """
-    return 1.0/(1.0+np.exp(-x))
+    #return 1.0/(1.0+np.exp(-x))
+    return 1.0-np.exp(-x)
 
 def bent(x): # DOES NOT WORK WITH NN
     """This function returns the bent identity of x"""
@@ -198,6 +199,16 @@ def bentDerivative(x): # DOES NOT WORK WITH NN
         (Note: Not Real Derivative)
     """
     return x/(2.0*sqrt(x**2 + 1.0)) + 1.0
+
+def silu(x): # DOES NOT WORK WITH NN
+    """This function returns the sigmoid-weight linear unit of x"""
+    return x*sigmoid(x)
+
+def siluDerivative(x): # DOES NOT WORK WITH NN
+    """This function returns the silu derivative of x
+        (Note: Not Real Derivative)
+    """
+    return x + (np.log(x)-np.log(1.0-x))*(1.0+x)
 
 
 class NeuralNetworkException(Exception):
@@ -216,9 +227,10 @@ class NeuralNetwork:
                        'sin': [sin,sinDerivative],
                        'binary': [binary,binaryDerivative],
                        'softsign': [softsign,softsignDerivative],
-                       'guassian': [gaussian,gaussianDerivative],
+                       'gaussian': [gaussian,gaussianDerivative],
                        'softplus': [softplus,softplusDerivative],
-                       'bent': [bent,bentDerivative]
+                       'bent': [bent,bentDerivative],
+                       'silu': [silu,siluDerivative]
                        }
     def __init__(self,layers,activeFn = 'sigmoid'):
         """layers is list of layer lengths"""
@@ -383,7 +395,7 @@ def main():
     #net.loadWeights('data.txt')
 
 def neuralXorTest():
-    net = NeuralNetwork([2,2,1],'sin')
+    net = NeuralNetwork([2,2,1],'silu')
 
     X = [[0,0],[1,0],[0,1],[1,1]];
     Y = [[0],[1],[1],[0]]
