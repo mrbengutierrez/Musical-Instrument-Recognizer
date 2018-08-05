@@ -1,35 +1,178 @@
 """
 This file contains a general purpose neural network that can be used for many
 applications
+
+NOTE: for the activation functions: only sigmoid, tanh, and arctan currently work
 """
 
 import numpy as np # necessary unless want to rewrite
 import matplotlib.pyplot as plt # only necessary for plot functions
 import json #only necessary for storing/loading weights from file
 
+
 def sigmoid(x):
-    """ This function computes the sigmoid of x"""
+    """ This function computes the sigmoid of x for NeuralNetwork"""
     return 1.0/(1.0 + np.exp(-x))
 
 def sigmoidDerivative(x):
-    """ This function computes the sigmoid derivative of x"""
-    return sigmoid(x)*(1.0-sigmoid(x))
+    """ This function computes the sigmoid derivative of x for NeuralNetwork"""
+    return x*(1.0-x)
 
 def tanh(x):
-    """ This function computes the tanh of x"""
+    """ This function computes the tanh of x for NeuralNetwork"""
     return np.tanh(x)
 
 def tanhDerivative(x):
-    """ This function computes the tanh derivative of x"""
+    """ This function computes the tanh derivative of x for NeuralNetwork"""
     return 1.0 - x**2
 
-def linear(x):
+def linear(x): # WORKS HORRIBLY
     """ This function returns x"""
     return x
 
-def linearDerivative(x):
+def linearDerivative(x): # WORKS HORRIBLY
     """ This function returns 1"""
-    return 1.0
+    if type(x) == type(int) or type(x) == type(float):
+        return 1.0
+    else:
+        output = [1.0 for _ in x]
+        return np.array(output)
+
+def arctan(x):
+    """This function returns the arctan of x for NeuralNetwork"""
+    return np.arctan(x)
+
+def arctanDerivative(x):
+    """This function returns the arctan derivative of x for NeuralNetwork"""
+    return 1.0/(np.tan(x)**2+1.0)
+
+def relu(x): # DOES NOT WORK WITH NN
+    """This function returns the reLu of x"""
+    if type(x) == type(int) or type(x) == type(float):
+        if x < 0.0:
+            return 0.0
+        return x
+    output = []
+    for value in x:
+        if value < 0.0:
+            output.append(0.0)
+        else:
+            output.append(value)
+    return np.array(output)
+
+def reluDerivative(x): # DOES NOT WORK WITH NN
+    """This function returns the reLu derivative of x"""
+    if type(x) == type(int) or type(x) == type(float):
+        if x < 0.0:
+            return 0.0
+        return 1.0
+    output = []
+    for value in x:
+        if value < 0.0:
+            output.append(0.0)
+        else:
+            output.append(1.0)
+    return np.array(output)
+
+def sinc(x): # DOES NOT WORK WITH NN
+    """This function returns the sinc of x"""
+    epsilon = 10^-4
+    if type(x) == type(int) or type(x) == type(float):
+        if x < epsilon and x > -epsilon: # if x == 0
+            return 1.0
+        return np.sin(x)/x
+    output = []
+    for value in x:
+        if value < epsilon and value > -epsilon: # if value == 0
+            output.append(1.0)
+        else:
+            output.append(np.sin(value)/value)
+    return np.array(output)
+
+def sincDerivative(x): # DOES NOT WORK WITH NN
+    """This function returns the sinc derivative of x"""
+    epsilon = 10^-4
+    if type(x) == type(int) or type(x) == type(float):
+        if x < epsilon and x > -epsilon: # if x == 0
+            return 0.0
+        return np.cos(x)/x - np.sin(x)/(x**2)
+    output = []
+    for value in x:
+        if value < epsilon and value > -epsilon: # if value == 0
+            output.append(0.0)
+        else:
+            output.append(np.cos(value)/value - np.sin(value)/(value**2))
+    return np.array(output)
+
+def sin(x): # DOES NOT WORK WITH NN
+    """This function returns the sine of x"""
+    return np.sin(x)
+
+def sinDerivative(x): # DOES NOT WORK WITH NN
+    """This function returns the sine derivative of x"""
+    return np.cos(x)
+
+def binary(x): # DOES NOT WORK WITH NN
+    """This function returns the binary step of x"""
+    if type(x) == type(int) or type(x) == type(float):
+        if x <0.0:
+            return 0.0
+        return 1.0
+    output = []
+    for value in x:
+        if value < 0.0:
+            output.append(0.0)
+        else:
+            output.append(1.0)
+    return np.array(output)
+
+def binaryDerivative(x): # DOES NOT WORK WITH NN
+    """This function returns the binary step derivative of x"""
+    epsilon = 10^-4
+    if type(x) == type(int) or type(x) == type(float):
+        if x < epsilon and x > -epsilon: # if x == 0
+            return 10^8
+        return 0.0
+    output = []
+    for value in x:
+        if value < epsilon and value > -epsilon: # if value == 0
+            output.append(0.0)
+        else:
+            output.append(10^8)
+    return np.array(output)
+
+def softsign(x): # DOES NOT WORK WITH NN
+    """This function returns the softsign of x"""
+    return x/(1.0+abs(x))
+
+def softsignDerivative(x): # DOES NOT WORK WITH NN
+    """This function returns the softsign derivative of x"""
+    return 1.0/(1+abs(x))**2
+
+def gaussian(x): # DOES NOT WORK WITH NN
+    """This function returns the guassian of x"""
+    return np.exp(-x**2)
+
+def gaussianDerivative(x): # DOES NOT WORK WITH NN
+    """This function returns the gaussian derivative of x"""
+    return -2.0*x*np.exp(-x**2)
+
+def softplus(x): # DOES NOT WORK WITH NN
+    """This function returns the softplus of x"""
+    return np.log(1+np.exp(x))
+
+def softplusDerivative(x): # DOES NOT WORK WITH NN
+    """This function returns the softplusDerivative of x"""
+    return 1.0/(1.0+np.exp(-x))
+
+def bent(x): # DOES NOT WORK WITH NN
+    """This function returns the bent identity of x"""
+    return (sqrt(x**2 + 1.0) - 1.0)/2.0 + x
+
+def bentDerivative(x): # DOES NOT WORK WITH NN
+    """This function returns the bent identity derivative of x"""
+    return x/(2.0*sqrt(x**2 + 1.0)) + 1.0
+
 
 class NeuralNetworkException(Exception):
     """ General Purpose Exception for class NeuralNetwork"""
@@ -38,18 +181,26 @@ class NeuralNetworkException(Exception):
         
 class NeuralNetwork:
     """ General Purpose Neural Network"""
+    activation_dict = {'sigmoid': [sigmoid,sigmoidDerivative],
+                       'tanh': [tanh,tanhDerivative],
+                       'linear':[linear,linearDerivative],
+                       'arctan': [arctan,arctanDerivative],
+                       'relu': [relu,reluDerivative],
+                       'sinc': [sinc,sincDerivative],
+                       'sin': [sin,sinDerivative],
+                       'binary': [binary,binaryDerivative],
+                       'softsign': [softsign,softsignDerivative],
+                       'guassian': [gaussian,gaussianDerivative],
+                       'softplus': [softplus,softplusDerivative],
+                       'bent': [bent,bentDerivative]
+                       }
     def __init__(self,layers,activeFn = 'sigmoid'):
         """layers is list of layer lengths"""
 
-        if activeFn == 'sigmoid':
-            self.activeFn = sigmoid
-            self.activeFnDerivative = sigmoidDerivative
-        elif activeFn == 'tanh':
-            self.activeFn = tanh
-            self.activeFnDerivative = tanhDerivative
-        elif activeFn == 'linear':
-            self.activeFn = linear
-            self.activeFnDerivative = linearDerivative
+        # get activation function
+        if activeFn in NeuralNetwork.activation_dict:
+            self.activeFn = NeuralNetwork.activation_dict[activeFn][0]
+            self.activeFnDerivative = NeuralNetwork.activation_dict[activeFn][1]
         else:
             raise ValueError('Invalid activation Function')
         
@@ -199,20 +350,20 @@ class NeuralNetwork:
 
 
 def main():
-    #neuralXorTest()
+    neuralXorTest()
 
-    net = NeuralNetwork([2,2,1])
-    net.storeWeights('data.txt', comment = 'Hi, World')
-    net.loadWeights('data.txt')
+    #net = NeuralNetwork([2,2,1])
+    #net.storeWeights('data.txt', comment = 'Hi, World')
+    #net.loadWeights('data.txt')
 
 def neuralXorTest():
-    net = NeuralNetwork([2,2,1],'tanh')
+    net = NeuralNetwork([2,2,1],'linear')
 
     X = [[0,0],[1,0],[0,1],[1,1]];
     Y = [[0],[1],[1],[0]]
     J = []
 
-    net.trainWithPlots(X,Y,intervals=10000)
+    net.trainWithPlots(X,Y,learning_rate=0.2,intervals=1000)
     for i in range(len(Y)):
         y_out = net.predict(X[i])
         print('Test Case: ' + str(X[i]) + ', Result: ' + str(y_out) )

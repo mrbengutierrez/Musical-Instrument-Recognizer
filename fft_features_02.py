@@ -15,7 +15,7 @@ def processFile(filename,plot = False):
 
     fs2, sig2 = downsample(sig1,fs1,4)
     N2 = len(sig2)
-    Ts2 = 1/fs2 #sampletime
+    Ts2 = 1/fs2 # sampletime
     T2 = Ts2*N2 # total time (sec)
     new_T = 0.15
     sig3 = sig2[N2//2-int(new_T/2*N2):N2//2] + sig2[N2//2:N2//2+int(new_T/2*N2)]
@@ -37,7 +37,6 @@ def processFile(filename,plot = False):
         freqs_side = np.array(freqs[range(N4//2)])
         plt.plot(freqs_side,FFT_side) # plotting the complete fft spectrum
         plt.show()
-    print(len(FFT_side))
     return FFT_side
 
     
