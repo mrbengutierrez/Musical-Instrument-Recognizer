@@ -2,7 +2,7 @@
 This file contains a general purpose neural network that can be used for many
 applications
 
-NOTE: for the activation functions: only sigmoid, tanh, and arctan currently work
+NOTE: for the activation functions: only sigmoid, tanh, and arctan, sin currently work
 """
 
 import numpy as np # necessary unless want to rewrite
@@ -15,7 +15,9 @@ def sigmoid(x):
     return 1.0/(1.0 + np.exp(-x))
 
 def sigmoidDerivative(x):
-    """ This function computes the sigmoid derivative of x for NeuralNetwork"""
+    """ This function computes the sigmoid derivative of x for NeuralNetwork
+        (Note: Not Real Derivative)
+    """
     return x*(1.0-x)
 
 def tanh(x):
@@ -23,7 +25,9 @@ def tanh(x):
     return np.tanh(x)
 
 def tanhDerivative(x):
-    """ This function computes the tanh derivative of x for NeuralNetwork"""
+    """ This function computes the tanh derivative of x for NeuralNetwork
+        (Note: Not Real Derivative)
+    """
     return 1.0 - x**2
 
 def linear(x): # WORKS HORRIBLY
@@ -31,7 +35,9 @@ def linear(x): # WORKS HORRIBLY
     return x
 
 def linearDerivative(x): # WORKS HORRIBLY
-    """ This function returns 1"""
+    """ This function returns 1
+        (Note: Not Real Derivative)
+    """
     if type(x) == type(int) or type(x) == type(float):
         return 1.0
     else:
@@ -43,11 +49,15 @@ def arctan(x):
     return np.arctan(x)
 
 def arctanDerivative(x):
-    """This function returns the arctan derivative of x for NeuralNetwork"""
+    """This function returns the arctan derivative of x for NeuralNetwork
+        (Note: Not Real Derivative)
+    """
     return 1.0/(np.tan(x)**2+1.0)
 
 def relu(x): # DOES NOT WORK WITH NN
-    """This function returns the reLu of x"""
+    """This function returns the reLu of x
+        (Note: Not Real Derivative)
+    """
     if type(x) == type(int) or type(x) == type(float):
         if x < 0.0:
             return 0.0
@@ -61,7 +71,9 @@ def relu(x): # DOES NOT WORK WITH NN
     return np.array(output)
 
 def reluDerivative(x): # DOES NOT WORK WITH NN
-    """This function returns the reLu derivative of x"""
+    """This function returns the reLu derivative of x
+        (Note: Not Real Derivative)
+    """
     if type(x) == type(int) or type(x) == type(float):
         if x < 0.0:
             return 0.0
@@ -90,7 +102,9 @@ def sinc(x): # DOES NOT WORK WITH NN
     return np.array(output)
 
 def sincDerivative(x): # DOES NOT WORK WITH NN
-    """This function returns the sinc derivative of x"""
+    """This function returns the sinc derivative of x
+        (Note: Not Real Derivative)
+    """
     epsilon = 10^-4
     if type(x) == type(int) or type(x) == type(float):
         if x < epsilon and x > -epsilon: # if x == 0
@@ -104,13 +118,15 @@ def sincDerivative(x): # DOES NOT WORK WITH NN
             output.append(np.cos(value)/value - np.sin(value)/(value**2))
     return np.array(output)
 
-def sin(x): # DOES NOT WORK WITH NN
+def sin(x): 
     """This function returns the sine of x"""
     return np.sin(x)
 
-def sinDerivative(x): # DOES NOT WORK WITH NN
-    """This function returns the sine derivative of x"""
-    return np.cos(x)
+def sinDerivative(x): 
+    """This function returns the sine derivative of x
+        (Note: Not Real Derivative)
+    """
+    return np.cos(np.arcsin(x))
 
 def binary(x): # DOES NOT WORK WITH NN
     """This function returns the binary step of x"""
@@ -127,7 +143,9 @@ def binary(x): # DOES NOT WORK WITH NN
     return np.array(output)
 
 def binaryDerivative(x): # DOES NOT WORK WITH NN
-    """This function returns the binary step derivative of x"""
+    """This function returns the binary step derivative of x
+        (Note: Not Real Derivative)
+    """
     epsilon = 10^-4
     if type(x) == type(int) or type(x) == type(float):
         if x < epsilon and x > -epsilon: # if x == 0
@@ -146,7 +164,9 @@ def softsign(x): # DOES NOT WORK WITH NN
     return x/(1.0+abs(x))
 
 def softsignDerivative(x): # DOES NOT WORK WITH NN
-    """This function returns the softsign derivative of x"""
+    """This function returns the softsign derivative of x
+        (Note: Not Real Derivative)
+    """
     return 1.0/(1+abs(x))**2
 
 def gaussian(x): # DOES NOT WORK WITH NN
@@ -154,7 +174,9 @@ def gaussian(x): # DOES NOT WORK WITH NN
     return np.exp(-x**2)
 
 def gaussianDerivative(x): # DOES NOT WORK WITH NN
-    """This function returns the gaussian derivative of x"""
+    """This function returns the gaussian derivative of x
+        (Note: Not Real Derivative)
+    """
     return -2.0*x*np.exp(-x**2)
 
 def softplus(x): # DOES NOT WORK WITH NN
@@ -162,7 +184,9 @@ def softplus(x): # DOES NOT WORK WITH NN
     return np.log(1+np.exp(x))
 
 def softplusDerivative(x): # DOES NOT WORK WITH NN
-    """This function returns the softplusDerivative of x"""
+    """This function returns the softplusDerivative of x
+        (Note: Not Real Derivative)
+    """
     return 1.0/(1.0+np.exp(-x))
 
 def bent(x): # DOES NOT WORK WITH NN
@@ -170,7 +194,9 @@ def bent(x): # DOES NOT WORK WITH NN
     return (sqrt(x**2 + 1.0) - 1.0)/2.0 + x
 
 def bentDerivative(x): # DOES NOT WORK WITH NN
-    """This function returns the bent identity derivative of x"""
+    """This function returns the bent identity derivative of x
+        (Note: Not Real Derivative)
+    """
     return x/(2.0*sqrt(x**2 + 1.0)) + 1.0
 
 
@@ -357,7 +383,7 @@ def main():
     #net.loadWeights('data.txt')
 
 def neuralXorTest():
-    net = NeuralNetwork([2,2,1],'linear')
+    net = NeuralNetwork([2,2,1],'sin')
 
     X = [[0,0],[1,0],[0,1],[1,1]];
     Y = [[0],[1],[1],[0]]
