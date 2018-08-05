@@ -4,12 +4,34 @@ import scipy.fftpack
 import numpy as np
 from matplotlib import pyplot as plt
 import os
+import wave
 
+
+def processFile(filename):
+    #fs = sample rate, sound = multichannel sound signal
+    fs, sound = wavfile.read(filename) 
+
+    s1 = sound[:,0] #left channel
+
+    N = len(s1) # num of samples
+    Ts = 1/fs #sampletime
+    t_len = Ts*N # total time (sec)
+    print(t_len)
+    print(s1)
+    print(N)
+
+def processSignal(signal,f_range):
+    pass
+
+
+    
 
 def plotFFT(filename):
     """Plots single sided FFT"""
     fs_rate, signal = wavfile.read(filename)
     len_audio = len(signal.shape)
+    print(signal.shape)
+    print(signal[:][0])
     if len_audio == 2:
         signal = signal.sum(axis=1) / 2
     N = signal.shape[0]
@@ -124,7 +146,8 @@ def printPlotWav(filename):
 
 
 def main():
-   plotFFT("sax.wav")
+   #plotFFT("sax.wav")
+    processFile('sax.wav')
    
 
 if __name__ == '__main__':

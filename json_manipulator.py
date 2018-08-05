@@ -5,7 +5,6 @@ This file shows how to manipulate json data
 import json
 
 
-
 def genList():
     a = []
     n = 5
