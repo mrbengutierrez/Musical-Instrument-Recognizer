@@ -236,14 +236,11 @@ class NeuralNetwork:
         """layers is list of layer lengths"""
 
         # get activation function
-        if activeFn in NeuralNetwork.activation_dict:
-            self.activeFn = NeuralNetwork.activation_dict[activeFn][0]
-            self.activeFnDerivative = NeuralNetwork.activation_dict[activeFn][1]
-        else:
-            raise ValueError('Invalid activation Function')
+        self.setActivationFn(activeFn)
         
         self.layers = layers
         self.theta = []
+        # Generate weight matrix with random weights -1 to 1
         for i in range(1,len(layers)):
             if i != len(layers)-1: 
                 weight_matrix = 2*np.random.rand(layers[i-1] + 1, layers[i] + 1) -1
@@ -251,6 +248,14 @@ class NeuralNetwork:
                 weight_matrix = 2*np.random.rand(layers[i-1] + 1, layers[i]) -1
             self.theta.append(weight_matrix)
 
+    def setActivationFn(self,activeFn):
+        """Sets the activation function"""
+        if activeFn in NeuralNetwork.activation_dict:
+            self.activeFn = NeuralNetwork.activation_dict[activeFn][0]
+            self.activeFnDerivative = NeuralNetwork.activation_dict[activeFn][1]
+        else:
+            raise ValueError('Invalid activation Function')        
+        
     def getLayers(self):
         """Return a list of layer lengths"""
         return self.layers
@@ -399,13 +404,13 @@ def main():
     #net.loadWeights('data.txt')
 
 def neuralXorTest():
-    net = NeuralNetwork([2,2,1],'silu')
+    net = NeuralNetwork([2,2,1],'sin')
 
     X = [[0,0],[1,0],[0,1],[1,1]];
     Y = [[0],[1],[1],[0]]
     J = []
 
-    net.trainWithPlots(X,Y,learning_rate=0.2,intervals=1000)
+    net.trainWithPlots(X,Y,learning_rate=0.2,intervals=10000)
     for i in range(len(Y)):
         y_out = net.predict(X[i])
         print('Test Case: ' + str(X[i]) + ', Result: ' + str(y_out) )

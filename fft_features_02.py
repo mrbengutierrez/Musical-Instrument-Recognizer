@@ -31,7 +31,6 @@ def processFile(filename,plot = False):
     for value in FFT_side:
         temp.append(value/sum(FFT_side))
     FFT_side = np.array(temp)
-    plot = True
     if plot == True:
         freqs = scipy.fftpack.fftfreq(sig4.size, Ts4)
         freqs_side = np.array(freqs[range(N4//2)])
