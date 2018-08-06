@@ -251,6 +251,10 @@ class NeuralNetwork:
                 weight_matrix = 2*np.random.rand(layers[i-1] + 1, layers[i]) -1
             self.theta.append(weight_matrix)
 
+    def getLayers(self):
+        """Return a list of layer lengths"""
+        return self.layers
+    
     def storeWeights(self,filename,comment = 'No Comment'):
         """Stores Weights in filename.
             filename (string): ex. 'data.txt'
