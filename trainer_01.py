@@ -63,6 +63,11 @@ class Trainer:
                 Y.append(self.output[name])
             print('Time take to process '+str(name)+ ': ' + str((time.time()-t1)/60) + 'min')
         self.net.trainWithPlots(X,Y,learning_rate,epochs)
+
+    #def preprocess(self
+                   #D:/CS542 Final project/flute_A4_15_mezzo-forte_normal.mp3
+
+        
             
                     
 
@@ -75,7 +80,7 @@ class Trainer:
 
 
 def main():
-    T = Trainer()
+    T = Trainer('IRMAS-tinybatch')
     T.train()
 
     

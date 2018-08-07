@@ -178,7 +178,7 @@ def printPlotWav(filename):
 
 def main():
    #plotFFT("sax.wav")
-    processFile2('sax.wav')
+    processFile2('IRMAS-tinybatch/sax/sax.wav')
    
 
 if __name__ == '__main__':

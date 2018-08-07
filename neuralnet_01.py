@@ -385,6 +385,7 @@ class NeuralNetwork:
         for i in range(len(self.theta)):
             self.printWeight(i)
             print()
+
             
     def printWeight(self,i):
         """Prints the weight matrix at index i of self.theta"""
@@ -404,11 +405,11 @@ def main():
     #net.loadWeights('data.txt')
 
 def neuralXorTest():
-    net = NeuralNetwork([2,2,1],'sin')
+    net = NeuralNetwork([2,2,1],'tanh')
 
     X = [[0,0],[1,0],[0,1],[1,1]];
     Y = [[0],[1],[1],[0]]
-    J = []
+    #J = []
 
     net.trainWithPlots(X,Y,learning_rate=0.2,intervals=10000)
     for i in range(len(Y)):
