@@ -25,3 +25,7 @@ So when training the data,
 	
 Also 0.6 sec is about 1/(100 beats per minute), so 0.3, 0.2 are good splice times
 
+Note: 08/06/2018
+preprocessed_02.py handles the processing of all of the data.
+neuralnet_01.py is a large neuralnet
+
