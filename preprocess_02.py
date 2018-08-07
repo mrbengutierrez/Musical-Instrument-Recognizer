@@ -267,20 +267,22 @@ def main():
     net = NN.NeuralNetwork([1024,1024,2],'tanh')
     net.trainWithPlots(X,Y,learning_rate=1.0,intervals = 1)
 
-    #X, Y = P.getXY()
-    #files = P.getFileList()
-    #output_vectors = P.getOutputVectors()
-    #output_names = P.getOutputNames()
-    #print()
-    #print('X = ' + str(X))
-    #print()
-    #print('Y = ' + str(Y))
-    #print()
-    #print('File List = ' + str(files))
-    #print()
-    #print('Output Vectors = ' + str(output_vectors))
-    #print()
-    #print('Output Names = ' + str(output_names))
+    # Test print functions, these print statements can be used to figure
+    # out how to use code
+    # X, Y = P.getXY()
+    # files = P.getFileList()
+    # output_vectors = P.getOutputVectors()
+    # output_names = P.getOutputNames()
+    # print()
+    # print('X = ' + str(X))
+    # print()
+    # print('Y = ' + str(Y))
+    # print()
+    # print('File List = ' + str(files))
+    # print()
+    # print('Output Vectors = ' + str(output_vectors))
+    # print()
+    # print('Output Names = ' + str(output_names))
 
     
 if __name__ == '__main__':
