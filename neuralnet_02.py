@@ -175,7 +175,7 @@ class NeuralNetwork:
                 self.trainSample(X[r],Y[r])
 
     def trainSequential(self,X,Y,learning_rate=1.0,intervals = 100):
-        """Trains the neural networks with a list of input vectors x
+        """Trains the neural networks with a list of input vectors X
            and a list of output vectors Y. Iterates in Sequential Order.
         """        
         for _ in range(intervals):
@@ -183,7 +183,7 @@ class NeuralNetwork:
                 self.trainSample(X[i],Y[i])
 
     def trainWithPlots(self,X,Y,learning_rate = 1.0,intervals = 100,thres_high = 0.8,thres_low =0.5):
-        """Trains the neural networks with a list of input vectors x
+        """Trains the neural networks with a list of input vectors X
            and a list of output vectors Y.
            Plots Cost function over each iteration.
            Iterates in Sequential Order.
@@ -222,7 +222,7 @@ class NeuralNetwork:
             n_final = n_array[n-n_last:]
             training_final = np.sum(np.divide(m_final,n_final))/n_last
             print('Training accuracy of last ' + str(n_last) + ' data points = ' + str(training_final))
-            
+        
     
     def trainSample(self,x,y,learning_rate=1.0):
         """Trains the neural networks with a single input vector x
@@ -233,19 +233,25 @@ class NeuralNetwork:
     def trainTestSample(self,x,y,learning_rate=1.0,thres_high = 0.8,thres_low =0.5):
         """Trains the neural networks with a single input vector x
             and a single output vector y.
-            Returns true if the Tested Sample is predicted correctly by
-            the neural network before backpropagation.
-            Prediction if target probabibility is above threshold, and
-            
-            Assumes that the target vector has only one positive value.
+            Takes prediction of tested sample using forward propagation
+            before doing backpropagation.
+            Returns true if target probabibility is above thres_high, and
+            and non-target probabilities are below thres_low.
+
+            tl:dr trains and tests one sample
         """
         a = self.forwardProp(x)
         self.backProp(a,y,learning_rate)
-        max_index, max_value = getMax(a[-1])
+        return self.compareProb(a[-1],y,thres_high,thres_low)
+
+    def compareProb(self,prob,y,thres_high,thres_low):
+        """Compares y with prob, probabitity vector from last activation layer
+            in backpropagation
+        """
         for i in range(len(y)):
-            if y[i] >= 0.5 and a[-1][i] < thres_high:
+            if y[i] >= 0.5 and prob[i] < thres_high:
                 return False
-            elif y[i] < 0.5 and a[-1][i] > thres_low:
+            elif y[i] < 0.5 and prob[i] > thres_low:
                 return False
         return True
         
@@ -273,8 +279,43 @@ class NeuralNetwork:
             active_layer = np.atleast_2d(a[i])
             delta = np.atleast_2d(deltas[i])
             self.theta[i] += learning_rate * active_layer.T.dot(delta)
+
+    def testBatch(self,X,Y,verbose = False,thres_high=0.9,thres_low=0.5):
+        """prints and returns the testing accuracy of a batch of testing vectors.
+            X (list of np.arrays): list of input vectors
+            Y (list of np.arrays): list of target vectors
+            if verbose == True, prints out whether each test vector passed/failed.
+        """
+        testing_accuracy = []
+        m = []
+        for i in range(len(X)):
+            if self.testSample(X[i],Y[i],thres_high,thres_low) == True:
+                m.append(1.0)
+            else:
+                m.append(0.0)
+        testing_accuracy = sum(m)/len(X)
+        
+        if verbose == True:
+            for i in range(len(m)):
+                if m[i] > 0.5:
+                    print('X['+str(i)+']: passed')
+                else:
+                    print('X['+str(i)+']: failed')
+        print('Testing Accuracy: ' + str(testing_accuracy))
+        
+        return testing_accuracy
             
-    def predict(self,x):
+    def testSample(self,x,y,thres_high=0.8,thres_low=0.5):
+        """ Returns true if target probabibility is above thres_high, and
+            and non-target probabilities are below thres_low.
+            Takes prediction of tested sample using probabilities from
+            forward propagation.
+        """
+        prob = self.forwardProp(x)[-1]
+        return self.compareProb(prob,y,thres_high,thres_low)
+        
+            
+    def predictProb(self,x):
         """Predicts an output vector for a given input vector x"""
         return self.forwardProp(x)[-1]
     
@@ -319,11 +360,14 @@ def neuralXorTest():
     Y = [[0],[1],[1],[0]]
     #J = []
 
-    net.trainWithPlots(X,Y,learning_rate=0.2,intervals=100)
+    net.trainWithPlots(X,Y,learning_rate=0.2,intervals=1000,thres_high=0.9,thres_low=0.5)
     for i in range(len(Y)):
-        y_out = net.predict(X[i])
+        y_out = net.predictProb(X[i])
         print('Test Case: ' + str(X[i]) + ', Result: ' + str(y_out) )
     net.printWeights()
+
+    print()
+    net.testBatch(X,Y,verbose=True)
 
     
 if __name__ == '__main__':
