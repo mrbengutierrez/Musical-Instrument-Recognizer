@@ -318,7 +318,6 @@ class Preprocess:
 
 def main():
     # Note: Preprocessed data should be in folder preprocessed
-    #P = Preprocess('preprocessed/test_01.txt',process=True,directory='phil_temp_03',comment = 'Hello World')
     P = Preprocess()
     #P.processData('preprocessed/test_01.txt',directory='phil_temp_03',comment = 'Hello World')
     P.loadData('preprocessed/rohan_02.rtf')
