@@ -1,4 +1,4 @@
-import neuralnet_01 as NN
+import neuralnet_02 as NN
 import numpy as np
 import os
 import glob
@@ -13,19 +13,24 @@ import scipy.io.wavfile as wavfile
 import scipy.fftpack
 
 
-def processFile(filename,plot = False,length = 1024):
+def processFile(filename,plot = False,length = 1024,q=4,error=True,fs_in=44100):
     """returns one sided FFT amplitudes of filename
         filename (string): ex) 'sax.wav'
         plot (bool): plots the one sided FFT if True, otherwise does not plot
-        length (int): Number of datapoints of one-sided fft
+        length (int): Number of datapoints of one-sided fft (must be even,preferably a power of 2)
+        q (int): Downsampling Rate (must be even, preferably power of 2)
+        error (bool): (optional argument) if True, throw ValueError if fs of filename != fs_in        fs_expected (int): (optional argument) Used when error is True to specify sample rate of file
+
+        Note: length < total_time*fs/(q)
+        Ex) length = 1024 < (0.25sec)*(44100Hz)/(4) = 2756
     """
     #fs = sample rate, sound = multichannel sound signal
     fs1, sound = wavfile.read(filename)
-    if fs1 != 44100:
-        raise ValueError('Sampling rate should be 44100 for: ' + filename)
+    if error and fs1 != fs_in:
+        raise ValueError('Sampling rate should be ' + str(fs_in) + ' for: ' + filename)
     sig1 = sound[:,0] #left channel
     
-    fs2, sig2 = downsample(sig1,fs1,4)
+    fs2, sig2 = downsample(sig1,fs1,q)
     N2 = len(sig2)
     sig3 = sig2[N2//2-length:N2//2+length]
 
@@ -146,7 +151,7 @@ class Preprocess:
         Y = data['Y']
         for y in Y:
             self.Y.append(list(y))# -> fine
-        #Test prints
+        #Test prints, uncomment to test if data looks correct
         #print('self.dirs = ' + str(self.dirs))
         #print()
         #print('self.files = ' + str(self.files))
@@ -204,7 +209,6 @@ class Preprocess:
         for name in self.dirs:
             t1 = time.time()
             for file in self.files[name]:
-                print(file)
                 input_vector = processFile(file,plot = False)
                 self.X.append(input_vector)
                 self.Y.append(self.output[name])
