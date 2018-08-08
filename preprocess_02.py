@@ -38,6 +38,8 @@ def processFile(filename,length = 1024,q=4,error=True,fs_in=44100,plot = False):
     FFT = abs(scipy.fft(sig3))
     FFT_side = FFT[range(len(FFT)//2)]
     if len(FFT_side) != length:
+        print('ERROR MESSAGE DETAILS')
+        print('filename: ' + filename)
         print('length = ' + str(length))
         print('fs_in = ' + str(fs_in))
         print('q = ' + str(q))
