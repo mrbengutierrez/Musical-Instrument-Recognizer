@@ -203,11 +203,13 @@ class NeuralNetwork:
         n_array = [i+1 for i in range(n)]
         n_array = np.array(n_array)
         training_accuracy = np.divide(m_array,n_array)
+        plt.figure(1)
         plt.plot(J)
         plt.ylabel('Cost')
         plt.xlabel('Training Sample')
         plt.title('Cost Function vs. Number of Training Samples')
-        plt.show()
+        
+        plt.figure(2)
         plt.plot(training_accuracy)
         plt.ylabel('Average Training Accuracy')
         plt.xlabel('Training Sample')
