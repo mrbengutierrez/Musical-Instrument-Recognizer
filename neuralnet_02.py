@@ -189,7 +189,7 @@ class NeuralNetwork:
            Iterates in Sequential Order.
         """     
         J = []
-        training_rate = []
+        training_accuracy = []
         m = 0.0
         m_array = []
         for _ in range(intervals):
@@ -202,24 +202,24 @@ class NeuralNetwork:
         n = len(X)*intervals
         n_array = [i+1 for i in range(n)]
         n_array = np.array(n_array)
-        training_rate = np.divide(m_array,n_array)
+        training_accuracy = np.divide(m_array,n_array)
         plt.plot(J)
         plt.ylabel('Cost')
         plt.xlabel('Training Sample')
         plt.title('Cost Function vs. Number of Training Samples')
         plt.show()
-        plt.plot(training_rate)
-        plt.ylabel('Average Training Rate')
+        plt.plot(training_accuracy)
+        plt.ylabel('Average Training Accuracy')
         plt.xlabel('Training Sample')
-        plt.title('Average Training Rate vs. Number of Training Samples')
+        plt.title('Average Training Accuracy vs. Number of Training Samples')
         plt.show()
-        print('Final Aggregate Average Training Rate = ' + str(training_rate[-1]))
+        print('Final Average Training Accuracy = ' + str(training_accuracy[-1]))
         n_last = 100
         if n > n_last:
             m_final = m_array[n-n_last:]
             n_final = n_array[n-n_last:]
             training_final = np.sum(np.divide(m_final,n_final))/n_last
-            print('Training rate of last ' + str(n_last) + ' data points = ' + str(training_final))
+            print('Training accuracy of last ' + str(n_last) + ' data points = ' + str(training_final))
             
     
     def trainSample(self,x,y,learning_rate=1.0):
