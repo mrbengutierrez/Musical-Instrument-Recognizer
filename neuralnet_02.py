@@ -3,6 +3,15 @@ This file contains a general purpose neural network that can be used for many
 applications
 
 NOTE: Working activation fns: sigmoid, tanh, arctan, sin, gaussian, softplus
+
+NOTE: trainTestSample(), trainWithPlots() ,testSample,,testBatch() come with
+      optional arguments thres_high,thres_low which are used to determine how
+      accurate your prediction needs to be. They are automatically set to 0.8
+      and 0.5. 
+
+      By raising thres_high or lowering thres_low, you put a tighter
+      bound on how accurate your neural net needs to be in order consider
+      the testing sample has passed accurately.
 """
 
 import numpy as np # necessary unless want to rewrite
