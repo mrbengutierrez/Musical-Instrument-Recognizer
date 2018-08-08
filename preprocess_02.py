@@ -43,13 +43,12 @@ import scipy.io.wavfile as wavfile
 import scipy.fftpack
 
 
-def processFile(filename,length = 1024,q=4,error=True,fs_in=44100,plot = False):
+def processFile(filename,length = 1024,q=4,fs_in=44100,plot = False):
     """returns one sided FFT amplitudes of filename
         filename (string): ex) 'sax.wav'
         length (int): Number of datapoints of one-sided fft (must be even,preferably a power of 2)
         q (int): (optional argument) Downsampling Rate 
-        error (bool): (optional argument) if True, throw ValueError if fs of filename != fs_in        fs_expected (int): (optional argument) Used when error is True to specify sample rate of file
-        fs_in (int): (optional argument) sample rate to compare to when error is true.
+        fs_in (int): (optional argument) throw ValueError if fs of filename != fs_in
         plot (bool): (optional argument) plots the one sided FFT if True, otherwise does not plot
         
         Note: length < total_time*fs//(2*q)
@@ -57,7 +56,7 @@ def processFile(filename,length = 1024,q=4,error=True,fs_in=44100,plot = False):
     """
     #fs = sample rate, sound = multichannel sound signal
     fs1, sound = wavfile.read(filename)
-    if error and fs1 != fs_in:
+    if fs1 != fs_in:
         raise ValueError('Sampling rate should be ' + str(fs_in) + ' for: ' + filename)
     sig1 = sound[:,0] #left channel
     
@@ -212,15 +211,14 @@ class Preprocess:
         
         
 
-    def processData(self,data_file,directory,comment = '',length = 1024,q=4,error=True,fs_in=44100):
+    def processData(self,data_file,directory,comment = '',length = 1024,q=4,fs_in=44100):
         """Processes the data in directory and stores it in data_file
             directory (string): folder of data to be processed
             data_file (string): name of file for data to be stored ex) data.txt
             comment (string): optional message to be stored with data
             length (int): Number of datapoints of one-sided fft (must be even,preferably a power of 2)
             q (int): Downsampling Rate (must be even, preferably power of 2)
-            fs_in (int): (optional argument) sample rate to compare to when error is true.
-            error (bool): (optional argument) if True, throw ValueError if fs of filename != fs_in        fs_expected (int): (optional argument) Used when error is True to specify sample rate of file
+            fs_in (int): (optional argument) throw ValueError if fs of filename != fs_i
         
             Note: length < total_time*fs/(q)
             Ex) length = 1024 < (0.25sec)*(44100Hz)/(4) = 2756
@@ -261,7 +259,7 @@ class Preprocess:
         for name in self.dirs:
             t1 = time.time()
             for file in self.files[name]:
-                input_vector = processFile(file,length = 1024,q=4,error=True,fs_in=44100,plot = False,)
+                input_vector = processFile(file,length = 1024,q=4,fs_in=44100,plot = False,)
                 self.X.append(input_vector)
                 self.Y.append(self.output[name])
             print('Time take to process '+str(name)+ ': ' + str((time.time()-t1)/60) + 'min')
