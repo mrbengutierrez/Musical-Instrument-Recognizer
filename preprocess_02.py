@@ -292,7 +292,7 @@ def main():
     P.loadData('preprocessed/test_01.txt')
     X, Y = P.getXY()
     net = NN.NeuralNetwork([1024,1024,3],'tanh')
-    net.trainWithPlots(X,Y,learning_rate=1.0,intervals = 1)
+    net.trainWithPlots(X,Y,learning_rate=1.0,intervals = 100)
 
     # Test print functions, these print statements can be used to figure
     # out how to use code

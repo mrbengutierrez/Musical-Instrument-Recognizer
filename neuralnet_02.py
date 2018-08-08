@@ -204,6 +204,7 @@ class NeuralNetwork:
         m = 0.0
         count = 0.0
         n = intervals*len(X)
+        print(n)
         if n < 100000:
             perc_delta = 0.2
         elif n < 10000000:
