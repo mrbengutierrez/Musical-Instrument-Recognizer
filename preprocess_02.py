@@ -289,10 +289,10 @@ def main():
     #P = Preprocess('preprocessed/test_01.txt',process=True,directory='phil_temp_03',comment = 'Hello World')
     P = Preprocess()
     #P.processData('preprocessed/test_01.txt',directory='phil_temp_03',comment = 'Hello World')
-    P.loadData('preprocessed/test_01.txt')
+    P.loadData('preprocessed/rohan_02.rtf')
     X, Y = P.getXY()
-    net = NN.NeuralNetwork([1024,1024,3],'tanh')
-    net.trainWithPlots(X,Y,learning_rate=1.0,intervals = 100)
+    net = NN.NeuralNetwork([1024,256,64,12],'sigmoid')
+    net.trainWithPlots(X,Y,learning_rate=0.01,intervals = 10)
 
     # Test print functions, these print statements can be used to figure
     # out how to use code

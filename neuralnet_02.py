@@ -283,6 +283,9 @@ class NeuralNetwork:
         
     def forwardProp(self,x):
         """Forward Propagates x through the Neural Network"""
+        if self.layers[0] != len(x):
+            raise ValueError('Length of input vector x != length of first layer: ' + str(len(x)) + ' != ' + str(self.layers[0]))
+        
         x = np.array(x)
         a = [np.append([1],x)]
 
@@ -293,6 +296,8 @@ class NeuralNetwork:
     
     def backProp(self,a,y,learning_rate):
         """Backward propagates y through the Neural Network using activations a"""
+        if self.layers[-1] != len(y):
+            raise ValueError('Length of target vector y != length of last layer: ' + str(len(y)) + ' != ' + str(self.layers[-1]))
         y = np.array(y)
         delta = y - a[-1]
         deltas = [delta * self.activeFnDerivative(a[-1])]
