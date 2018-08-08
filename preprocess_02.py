@@ -13,16 +13,17 @@ import scipy.io.wavfile as wavfile
 import scipy.fftpack
 
 
-def processFile(filename,plot = False,length = 1024,q=4,error=True,fs_in=44100):
+def processFile(filename,length = 1024,q=4,error=True,fs_in=44100,plot = False):
     """returns one sided FFT amplitudes of filename
         filename (string): ex) 'sax.wav'
-        plot (bool): plots the one sided FFT if True, otherwise does not plot
         length (int): Number of datapoints of one-sided fft (must be even,preferably a power of 2)
-        q (int): Downsampling Rate (must be even, preferably power of 2)
+        q (int): (optional argument) Downsampling Rate 
         error (bool): (optional argument) if True, throw ValueError if fs of filename != fs_in        fs_expected (int): (optional argument) Used when error is True to specify sample rate of file
-
-        Note: length < total_time*fs/(q)
-        Ex) length = 1024 < (0.25sec)*(44100Hz)/(4) = 2756
+        fs_in (int): (optional argument) sample rate to compare to when error is true.
+        plot (bool): (optional argument) plots the one sided FFT if True, otherwise does not plot
+        
+        Note: length < total_time*fs//(2*q)
+        Ex) length = 1024 < (0.25sec)*(44100Hz)//(2*4) = 1378
     """
     #fs = sample rate, sound = multichannel sound signal
     fs1, sound = wavfile.read(filename)
@@ -36,6 +37,16 @@ def processFile(filename,plot = False,length = 1024,q=4,error=True,fs_in=44100):
 
     FFT = abs(scipy.fft(sig3))
     FFT_side = FFT[range(len(FFT)//2)]
+    if len(FFT_side) != length:
+        print('length = ' + str(length))
+        print('fs_in = ' + str(fs_in))
+        print('q = ' + str(q))
+        total_time = len(sig1)/fs1
+        print('total_time =  ' + str(total_time))
+        print('Please check: length < total_time*fs//(2*q)')
+        print('Check: ' + str(length) + ' < ' + str(total_time*fs1//(2*q)))
+        raise ValueError('Length FFT_side != length: ' + str(len(FFT_side)) + ' != ' + str(length))
+        
     
     temp = []
     # normalize FFT
@@ -47,6 +58,7 @@ def processFile(filename,plot = False,length = 1024,q=4,error=True,fs_in=44100):
         freqs_side = np.array(freqs[range(N4//2)])
         plt.plot(freqs_side,FFT_side) # plotting the complete fft spectrum
         plt.show()
+ 
     #print(len(FFT_side))
     return FFT_side
 
@@ -65,7 +77,7 @@ def downsample(sig,fs,q):
     return (fs//q,new_sig)
 
 class Preprocess:
-    def __init__(self,data_file,process=False,directory='IRMAS-TrainingData',comment = ''):
+    def __init__(self):
         """data_file (string): contains the file to load or store data, ex)data.txt
             process (bool): if False, load data from data_file,
                             if True, process data in directory & store in data_file
@@ -91,10 +103,10 @@ class Preprocess:
         self.X = [] # list of input vectors
         self.Y = [] # list of output vectors
 
-        if process == False:
-            self.loadData(data_file)
-        else: #process == True:
-            self.processData(data_file,directory,comment)
+        #if process == False:
+            #self.loadData(data_file)
+        #else: #process == True:
+            #self.processData(data_file,directory,comment)
 
     def getXY(self):
         """Returns X (List of Input Vectors), and Y (List of Output Vectors)
@@ -168,10 +180,18 @@ class Preprocess:
         
         
 
-    def processData(self,data_file,directory,comment = ''):
+    def processData(self,data_file,directory,comment = '',length = 1024,q=4,error=True,fs_in=44100):
         """Processes the data in directory and stores it in data_file
             directory (string): folder of data to be processed
-            data_file (string): name of file for data to be stored ex) 
+            data_file (string): name of file for data to be stored ex) data.txt
+            comment (string): optional message to be stored with data
+            length (int): Number of datapoints of one-sided fft (must be even,preferably a power of 2)
+            q (int): Downsampling Rate (must be even, preferably power of 2)
+            fs_in (int): (optional argument) sample rate to compare to when error is true.
+            error (bool): (optional argument) if True, throw ValueError if fs of filename != fs_in        fs_expected (int): (optional argument) Used when error is True to specify sample rate of file
+        
+            Note: length < total_time*fs/(q)
+            Ex) length = 1024 < (0.25sec)*(44100Hz)/(4) = 2756
         """
         self.dirs = [name for name in os.listdir(directory)
             if os.path.isdir(os.path.join(directory, name))]
@@ -209,7 +229,7 @@ class Preprocess:
         for name in self.dirs:
             t1 = time.time()
             for file in self.files[name]:
-                input_vector = processFile(file,plot = False)
+                input_vector = processFile(file,length = 1024,q=4,error=True,fs_in=44100,plot = False,)
                 self.X.append(input_vector)
                 self.Y.append(self.output[name])
             print('Time take to process '+str(name)+ ': ' + str((time.time()-t1)/60) + 'min')
@@ -266,9 +286,12 @@ class Preprocess:
 
 def main():
     # Note: Preprocessed data should be in folder preprocessed
-    P = Preprocess('preprocessed/test_01.txt',process=True,directory='phil_temp_03',comment = 'Hello World')
+    #P = Preprocess('preprocessed/test_01.txt',process=True,directory='phil_temp_03',comment = 'Hello World')
+    P = Preprocess()
+    #P.processData('preprocessed/test_01.txt',directory='phil_temp_03',comment = 'Hello World')
+    P.loadData('preprocessed/test_01.txt')
     X, Y = P.getXY()
-    net = NN.NeuralNetwork([1024,1024,2],'tanh')
+    net = NN.NeuralNetwork([1024,1024,3],'tanh')
     net.trainWithPlots(X,Y,learning_rate=1.0,intervals = 1)
 
     # Test print functions, these print statements can be used to figure

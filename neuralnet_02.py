@@ -17,6 +17,7 @@ NOTE: trainTestSample(), trainWithPlots() ,testSample,,testBatch() come with
 import numpy as np # necessary unless want to rewrite
 import matplotlib.pyplot as plt # only necessary for plot functions
 import json #only necessary for storing/loading weights from file
+import time #only necessay for letting you know how long training is taking
 
 
 def sigmoid(x):
@@ -196,20 +197,37 @@ class NeuralNetwork:
            and a list of output vectors Y.
            Plots Cost function over each iteration.
            Iterates in Sequential Order.
-        """     
-        J = []
+        """
+        t1 = time.time() #keep track of running time
+        J = [] 
         training_accuracy = []
         m = 0.0
+        count = 0.0
+        n = intervals*len(X)
+        if n < 100000:
+            perc_delta = 0.2
+        elif n < 10000000:
+            perc_delta = 0.1
+        else:
+            perc_delta = 0.05
+        perc_check = perc_delta
         m_array = []
+        n_array = []
         for _ in range(intervals):
             for i in range(len(X)):
                 if self.trainTestSample(X[i],Y[i],thres_high,thres_low) == True:
                     m += 1.0
+                count+=1
                 m_array.append(m)
+                n_array.append(count)
+                if count/n > perc_check:
+                    print('Training is ' + str(int(count/n*100)) + '% complete. ' +
+                          'Running Time: ' + str((time.time()-t1)/60)[:4] + ' min.')
+                    perc_check += perc_delta
                 J.append( self.lossFunction(X[i],Y[i]) )
+        print('Total Training Time = ' + str((time.time()-t1)/60)[0:4] + str(' min.'))
+        print()
         m_array = np.array(m_array)
-        n = len(X)*intervals
-        n_array = [i+1 for i in range(n)]
         n_array = np.array(n_array)
         training_accuracy = np.divide(m_array,n_array)
         plt.figure(1)
@@ -231,7 +249,6 @@ class NeuralNetwork:
             n_final = n_array[n-n_last:]
             training_final = np.sum(np.divide(m_final,n_final))/n_last
             print('Training accuracy of last ' + str(n_last) + ' data points = ' + str(training_final))
-        
     
     def trainSample(self,x,y,learning_rate=1.0):
         """Trains the neural networks with a single input vector x
