@@ -319,8 +319,8 @@ class Preprocess:
 def main():
     # Note: Preprocessed data should be in folder preprocessed
     P = Preprocess()
-    #P.processData('preprocessed/test_01.txt',directory='phil_temp_03',comment = 'Hello World')
-    P.loadData('preprocessed/rohan_02.rtf')
+    P.processData('preprocessed/test_01.txt',directory='phil_temp_03',comment = 'Hello World')
+    #P.loadData('preprocessed/rohan_02.rtf')
     X, Y = P.getXY()
     net = NN.NeuralNetwork([1024,256,64,12],'sigmoid')
     net.trainWithPlots(X,Y,learning_rate=0.01,intervals = 10)
