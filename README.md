@@ -75,7 +75,7 @@ neuralnet_01.py is a large neuralnet
 * Put data and labels in directory
 
 ### Preprocessing: Mp3 to Wav
-![Cello, Note Aw, Uncompressed Time Signal](https://raw.githubusercontent.com/mrbengutierrez/Musical-Instrument-Decoder/master/images/01_cello_A2_3sec_time.png)
+![Cello, Note Aw, Uncompressed Time Signal](https://github.com/mrbengutierrez/Musical-Instrument-Decoder/tree/master/images/01_cello_A2_3sec_time.png)
 
 
 
