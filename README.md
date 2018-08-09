@@ -29,3 +29,60 @@ Note: 08/06/2018
 preprocess_02.py handles the processing of all of the data.
 neuralnet_01.py is a large neuralnet
 
+# Musical-Instrument-Decoder ##
+## Ben Gutierrez, Ellen Mak, Rohan Pahwa ##
+
+## AKA **The Instrumental Specialists** ##
+
+### Introduction ###
+* Identify which instrument is playing
+* Identify which note is playing 
+* Overarching goal: generate a score of the music being played
+
+### Our Approach ###
+* Pre-processing
+	* Mp3 to wav file
+	* Label the data in folders
+	* Downsample
+	* Take subsample
+	* Take FFT
+	* Use One-side of FFT
+* Training
+	* Neural Network
+	* Different activation functions 
+	* Different number layers
+	* Different number nodes per layer
+* Testing
+	* Upper Threshold
+	* Lower Threshold
+
+### Data Set ###
+* From Philharmonia Orchestra Sound Samples
+* Samples of different instruments playing different notes 
+	* 2,478 samples
+	* Flute (190 samples)
+	* Cello (875 samples)
+	* Saxophone (722 samples)
+	* Clarinet (617 samples)
+	* Banjo (74 samples)
+	
+### Preprocessing ###
+* Mp3 to wav
+* Take sample of file - downsample
+* Take a subsample of the data (2048 data points in the center)
+* Take FFT for frequency transform
+* Take One-Side of FFT
+* Put data and labels in directory
+
+### Preprocessing: Mp3 to Wav
+![Cello, Note Aw, Uncompressed Time Signal](https://raw.githubusercontent.com/mrbengutierrez/Musical-Instrument-Decoder/master/images/01_cello_A2_3sec_time.png)
+
+
+
+
+
+
+
+
+
+
