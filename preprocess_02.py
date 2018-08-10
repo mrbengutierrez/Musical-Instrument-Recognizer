@@ -41,6 +41,18 @@ import scipy
 import matplotlib.pylab as plt
 import scipy.io.wavfile as wavfile
 import scipy.fftpack
+from scipy.fftpack import dct
+
+
+def getMax(array_list):
+    """Returns a tuple (index,value) of the maximum in an 1D array or list"""
+    m = array_list[0]
+    m_index = 0
+    for i,value in enumerate(array_list):
+        if value > m:
+            m = value
+            m_index = i
+    return (m_index,m)
 
 
 def processFile(filename,length = 256,q=1,fs_in=8000,divide=4,plot=False):
@@ -60,15 +72,19 @@ def processFile(filename,length = 256,q=1,fs_in=8000,divide=4,plot=False):
     try:
         fs1, sound = wavfile.read(filename)
     except ValueError:
-        print('filename = ' + str(filename) + ' failed to process')
+        print(str(filename) + ' failed to process')
         return 'failed'
     if fs1 != fs_in:
         raise ValueError('Sampling rate should be ' + str(fs_in) + ' for: ' + filename)
     sig1 = sound[:,0] #left channel
+    pre_emphasis = 0.97
+    sig1 = np.append(sig1[0], sig1[1:] - pre_emphasis * sig1[:-1])
+
     
     fs2, sig2 = downsample(sig1,fs1,q)
     N2 = len(sig2)
     sig3 = sig2[N2//2-length:N2//2+length]
+    #print(len(sig3))
 
     FFT = abs(scipy.fft(sig3))
     FFT_side = FFT[range(len(FFT)//2)]
@@ -88,19 +104,148 @@ def processFile(filename,length = 256,q=1,fs_in=8000,divide=4,plot=False):
         raise ValueError('Length FFT_side != length: ' + str(len(FFT_side)) + ' != ' + str(length))
         
     
-    temp = []
+    FFT_log = []
     # normalize FFT
     for value in FFT_side:
-        temp.append(value/sum(FFT_side))
-    FFT_side = np.array(temp)
+        value = np.log(value)
+        FFT_log.append(value)
+    max_val = getMax(FFT_log)[1]
+    FFT_norm = []
+    for value in FFT_log:
+        FFT_norm.append(value/max_val)
+    
+    
+    FFT_side = np.array(FFT_norm)
+    FFT_divided =  FFT_side[range(length//divide)]
+    #plot = True
     if plot == True:
         freqs = scipy.fftpack.fftfreq(sig3.size, 1/fs2)
-        freqs_side = np.array(freqs[range(len(FFT)//2)])
-        plt.plot(freqs_side,FFT_side) # plotting the complete fft spectrum
+        freqs_divided = np.array(freqs[range(len(FFT_divided))])
+        plt.plot(freqs_divided,FFT_divided) # plotting the complete fft spectrum
         plt.show()
- 
-    #print(len(FFT_side))
-    return FFT_side[range(length//4)]
+    
+    return FFT_divided
+
+
+def processMPCC(filename,subsample=2048):
+    #assume 8000Hz
+    #amplify high frequencies
+
+    #Setup
+    try:
+        fs, signal = wavfile.read(filename)  # File assumed to be in the same directory
+    except ValueError:
+        print(filename + ' failed to process.')
+        print('Failed Read')
+        print()
+        return 'failed'
+    half = len(signal)//2
+    side = subsample//2
+    signal = signal[half-side:half+side]
+    if side != len(signal)//2:
+        print(filename + ' failed to process.')
+        print('N too small, N: ' + str(len(signal)) + ', subsample: ' + str(subsample))
+        print()
+        return 'failed'
+    sig = signal[:,0] #get first channel
+    
+    #Pre-Emphasis
+    pre_emphasis = 0.97
+    e_sig = sig[1:] - pre_emphasis * sig[0:-1] #emphasized signal
+    sig_len = len(e_sig)
+    
+    #Framing
+    fr_size = 0.025 # frame size (sec)
+    fr_overlap = 0.01 # frame stride, frame overlap (sec)
+    fr_len = int(round(fr_size * fs)) # frame length (sec/sec)
+    fr_step = int(round(fr_overlap * fs)) # amt to step frame each time 
+    num_fr = int(np.ceil(np.abs(sig_len - fr_len) / fr_step)) #Number of Frames
+
+    padding = num_fr * fr_step + fr_len # Amount of padding between frames
+    z = [0 for _ in range(padding-sig_len)]
+    z = np.array(z)
+    pad_sig = np.append(e_sig, z) # Pad Signal so frames equal size
+
+    temp = [i for i in range(fr_len)]
+    temp2 = [i*fr_step for i in range(num_fr * fr_step)]
+    temp = np.array(temp)
+    temp2 = np.array(temp2)
+
+    #idx = np.tile(np.linspace(0, fr_len,fr_len), (num_fr, 1)) + np.tile(np.linspace(0, num_fr * fr_step, fr_step * num_fr), (fr_len, 1)).T
+    #fr = pad_sig[idx]
+    idx = np.tile(np.arange(0, fr_len), (num_fr, 1)) + np.transpose(np.tile(np.arange(0, num_fr * fr_step, fr_step), (fr_len, 1)))
+    fr = pad_sig[idx.astype(np.int32)]
+
+    #Window
+    NFFT = 512
+    fr = fr * ( 0.54 - 0.46 * np.cos((2 * np.pi * NFFT) / (fr_len - 1)) )  # Hamming Window
+
+
+    #Fourier-Transform and Power Spectrum
+    #NFFT = NFFT
+    mag_fr = np.absolute(np.fft.rfft(fr, NFFT))  # Magnitude of the FFT
+    pow_fr = (1.0 / NFFT) * ((mag_fr) ** 2)  # Power Spectrum
+
+    #Filter Banks
+    nfilt = 40
+    low_freq_mel = 0
+    high_freq_mel = (2595 * np.log10(1 + (fs / 2) / 700))  # Convert Hz to Mel
+    mel_points = np.linspace(low_freq_mel, high_freq_mel, nfilt + 2)  # Equally spaced in Mel scale
+    hz_points = (700 * (10**(mel_points / 2595) - 1))  # Convert Mel to Hz
+    bin = np.floor((NFFT + 1) * hz_points / fs)
+
+    fbank = np.zeros((nfilt, int(np.floor(NFFT / 2 + 1))))
+    for m in range(1, nfilt + 1):
+        f_m_minus = int(bin[m - 1])   # left
+        f_m = int(bin[m])             # center
+        f_m_plus = int(bin[m + 1])    # right
+
+        for k in range(f_m_minus, f_m):
+            fbank[m - 1, k] = (k - bin[m - 1]) / (bin[m] - bin[m - 1])
+        for k in range(f_m, f_m_plus):
+            fbank[m - 1, k] = (bin[m + 1] - k) / (bin[m + 1] - bin[m])
+    filter_banks = np.dot(pow_frames, fbank.T)
+    filter_banks = np.where(filter_banks == 0, np.finfo(float).eps, filter_banks)  # Numerical Stability
+    filter_banks = 20 * np.log10(filter_banks)  # convert to dB
+
+    #Mel-frequency Cepstral Coefficients (MFCCs)
+    num_ceps = 12
+    mfcc = dct(filter_banks, type=2, axis=1, norm='ortho')[:, 1 : (num_ceps + 1)] # Keep 2-13
+
+    #Sinusoidal Filtering
+    cep_lifter = 22 # dim of MFCC vector
+    (nframes, ncoeff) = mfcc.shape
+    n = np.arange(ncoeff)
+    lift = 1 + (cep_lifter / 2) * np.sin(np.pi * n / cep_lifter)
+    mfcc *= lift  #*
+
+    #Mean Normalization
+    epsilon = 1e-8
+    for i in range(len(filter_banks)):
+        filter_banks[i] -= mean(filter_banks) + epsilon
+    for i in range(len(mfcc)):
+        mfcc[i] -= mean(mfcc) + epsilon
+
+    output = []
+    for i in range(len(mfcc)):
+        for j in range(len(mfcc[0])):
+            output.append(mfcc[i][j])
+    
+    m = getMax(output)[1]
+    for i,value in enumerate(output):
+        output[i] = value/m
+    return np.array(output)
+
+
+def mean(array_list):
+    """Returns the mean of an array or list"""
+    count = 0.0
+    for value in array_list:
+        count += value
+    return count/len(array_list)
+
+
+    
 
 
 
@@ -155,6 +300,14 @@ class Preprocess:
             ex) Y = [[0],[1],[1],[0]]
         """
         return (self.X,self.Y)
+
+    def getInputLength(self):
+        """Returns length of Input Layer"""
+        return len(self.X[0])
+
+    def getOutputLength(self):
+        """Returns length of Output Layer"""
+        return len(self.Y[0])
     
     def getFileList(self):
         """Returns a dictionary with key:value 'Output Name':[file list]
@@ -220,7 +373,7 @@ class Preprocess:
         
         
 
-    def processData(self,data_file,directory,comment = '',length=256,q=1,fs_in=8000,divide=4):
+    def processData(self,data_file,directory,comment = '',way='mpcc',opt=[1024]):
         """Processes the data in directory and stores it in data_file
             directory (string): folder of data to be processed
             data_file (string): name of file for data to be stored ex) data.txt
@@ -262,20 +415,24 @@ class Preprocess:
             self.output[name] = np.array(temp)
             i +=1
 
-        length1 = length
-        q1 = q 
-        divide1 = divide
-        fs_in1 = fs_in
         #self.X = [] # list of input vectors
         #self.Y = [] # list of output vectors
+        t0 = time.time()
         for name in self.dirs:
             t1 = time.time()
             for file in self.files[name]:
-                input_vector = processFile(file,length=length1,q=q1,fs_in=fs_in1,divide=divide1,plot = False)
+                #input_vector = processFile(file,length=length1,q=q1,fs_in=fs_in1,divide=divide1,plot = False)
+                if way == 'mpcc':
+                    input_vector = processMPCC(file,opt[0])
+                elif way == 'fft':
+                    input_vector = processFFT(file)
+                else:
+                    raise ValueError('Invalid Way, valid types include: \'mpcc\' or \'fft\'')
                 if input_vector != 'failed':
                     self.X.append(input_vector)
                     self.Y.append(self.output[name])
-            print('Time take to process '+str(name)+ ': ' + str((time.time()-t1)/60) + 'min')
+            print('Time take to process '+str(name)+ ': ' + str((time.time()-t1)/60)[0:4] + ' min.')
+        print('Total Processing Time: ' + str((time.time()-t0)/60)[0:4] + ' min.')
 
         # Now we can store all of the data in a json
         # Need to store self.X, self.Y, self.dirs,self.output,self.files,self.data
@@ -329,15 +486,20 @@ class Preprocess:
 
 def main():
     # Note: Preprocessed data should be in folder preprocessed
-    input_length = 256
+    v = processMPCC('instruments_07/banjo/banjo_A3_very-long_forte_normal.wav')
+    print('len(input layer) = ' + str(len(v)))
+    #raise Exception
     P = Preprocess()
-    P.processData('preprocessed/processed_01.txt',directory='instruments',fs_in=8000,length=input_length,q=1,divide=1,comment = 'Instrument Data')
-    #P.loadData('preprocessed/test_01.txt')
+    #P.processData('preprocessed/processed_01.txt',directory='instruments_07',fs_in=8000,length=input_length,q=1,divide=1,comment = 'Instrument Data')
+    P.processData('preprocessed/processed_01.txt',directory='instruments_03',way='mpcc',opt = [2048])
+    P.loadData('preprocessed/processed_01.txt')
     X, Y = P.getXY()
-    net = NN.NeuralNetwork([input_length,64,12],'sigmoid')
+    print('Input Layer Length: ' + str(len(X[0])))
+    print('Output Layer Length: ' + str(len(Y[0])))
+    net = NN.NeuralNetwork([len(X[0]),100,len(Y[0])],'sigmoid')
     net.storeWeights('weights/weights_01')
-    net.loadWeights('weights/weights_01')
-    net.trainWithPlots(X,Y,learning_rate=0.01,intervals = 10)
+    #net.loadWeights('weights/weights_01')
+    net.trainWithPlots(X,Y,learning_rate=1,intervals = 100,way='max')
     net.testBatch(X,Y)
 
     # Test print functions, these print statements can be used to figure

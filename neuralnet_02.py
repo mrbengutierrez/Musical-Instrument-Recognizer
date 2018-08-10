@@ -217,11 +217,13 @@ class NeuralNetwork:
             for i in range(len(X)):
                 self.trainSample(X[i],Y[i])
 
-    def trainWithPlots(self,X,Y,learning_rate = 1.0,intervals = 100,thres_high = 0.8,thres_low =0.5):
+    def trainWithPlots(self,X,Y,learning_rate = 1.0,intervals = 100,way='max'):
         """Trains the neural networks with a list of input vectors X
            and a list of output vectors Y.
            Plots Cost function over each iteration.
            Iterates in Sequential Order.
+           way (string): (optional arg) comparison method for testing
+                            valid options are 'max','thres'
         """
         t1 = time.time() #keep track of running time
         J = [] 
@@ -237,14 +239,16 @@ class NeuralNetwork:
             perc_delta = 0.05
         perc_check = perc_delta
         m_array = []
-        n_array = []
+        training_accuracy = []
         for _ in range(intervals):
-            for i in range(len(X)):
-                if self.trainTestSample(X[i],Y[i],thres_high,thres_low) == True:
+            for _ in range(len(X)):
+                i = np.random.choice(len(X))
+                if self.trainTestSample(X[i],Y[i],learning_rate,way) == True:
                     m += 1.0
                 count+=1
-                m_array.append(m)
-                n_array.append(count)
+                training_accuracy.append(m/count)
+                #m_array.append(m)
+                #n_array.append(count)
                 if count/n > perc_check:
                     print('Training is ' + str(int(count/n*100)) + '% complete. ' +
                           'Running Time: ' + str((time.time()-t1)/60)[:4] + ' min.')
@@ -252,9 +256,9 @@ class NeuralNetwork:
                 J.append( self.lossFunction(X[i],Y[i]) )
         print('Total Training Time = ' + str((time.time()-t1)/60)[0:4] + str(' min.'))
         print()
-        m_array = np.array(m_array)
-        n_array = np.array(n_array)
-        training_accuracy = np.divide(m_array,n_array)
+        #m_array = np.array(m_array)
+        #n_array = np.array(n_array)
+        training_accuracy = np.array(training_accuracy)
         plt.figure(1)
         plt.plot(J)
         plt.ylabel('Cost')
@@ -267,13 +271,13 @@ class NeuralNetwork:
         plt.xlabel('Training Sample')
         plt.title('Average Training Accuracy vs. Number of Training Samples')
         plt.show()
-        print('Final Average Training Accuracy = ' + str(training_accuracy[-1]))
-        n_last = 100
-        if n > n_last:
-            m_final = m_array[n-n_last:]
-            n_final = n_array[n-n_last:]
-            training_final = np.sum(np.divide(m_final,n_final))/n_last
-            print('Training accuracy of last ' + str(n_last) + ' data points = ' + str(training_final))
+        print('Average Training Accuracy = ' + str(training_accuracy[-1]*100)[0:8]+'%')
+        #n_last = 100
+        #if n > n_last:
+            #m_final = m_array[n-n_last:]
+            #n_final = n_array[n-n_last:]
+            #training_final = np.sum(np.divide(m_final,n_final))/n_last
+            #print('Training accuracy of last ' + str(n_last) + ' data points = ' + str(training_final))
     
     def trainSample(self,x,y,learning_rate=1.0):
         """Trains the neural networks with a single input vector x
@@ -281,30 +285,39 @@ class NeuralNetwork:
         a = self.forwardProp(x)
         self.backProp(a,y,learning_rate)
 
-    def trainTestSample(self,x,y,learning_rate=1.0,thres_high = 0.8,thres_low =0.5):
+    def trainTestSample(self,x,y,learning_rate=1.0,way='max'):
         """Trains the neural networks with a single input vector x
             and a single output vector y.
             Takes prediction of tested sample using forward propagation
             before doing backpropagation.
-            Returns true if target probabibility is above thres_high, and
-            and non-target probabilities are below thres_low.
+            way (string): (optional arg) comparison method for testing
+                            valid options are 'max','thres'
 
             tl:dr trains and tests one sample
         """
         a = self.forwardProp(x)
         self.backProp(a,y,learning_rate)
-        return self.compareProb(a[-1],y,thres_high,thres_low)
+        return self.compareProb(a[-1],y,way)
 
-    def compareProb(self,prob,y,thres_high,thres_low):
+    def compareProb(self,prob,y,way='max'):
         """Compares y with prob, probabitity vector from last activation layer
             in backpropagation
         """
-        for i in range(len(y)):
-            if y[i] >= 0.5 and prob[i] < thres_high:
-                return False
-            elif y[i] < 0.5 and prob[i] > thres_low:
-                return False
-        return True
+        if way == 'max':
+            if getMax(prob)[0] == getMax(y)[0]:
+                return True
+            return False
+        elif way == 'thres':
+            thres_high = 0.8
+            thres_low = 0.5
+            for i in range(len(y)):
+                if y[i] >= 0.5 and prob[i] < thres_high:
+                    return False
+                elif y[i] < 0.5 and prob[i] > thres_low:
+                    return False
+            return True
+        else:
+            raise NeuralNetworkException('way not given')
         
     def forwardProp(self,x):
         """Forward Propagates x through the Neural Network"""
@@ -336,7 +349,7 @@ class NeuralNetwork:
             delta = np.atleast_2d(deltas[i])
             self.theta[i] += learning_rate * active_layer.T.dot(delta)
 
-    def testBatch(self,X,Y,verbose = False,thres_high=0.9,thres_low=0.5):
+    def testBatch(self,X,Y,verbose = False,way='max'):
         """prints and returns the testing accuracy of a batch of testing vectors.
             X (list of np.arrays): list of input vectors
             Y (list of np.arrays): list of target vectors
@@ -345,30 +358,39 @@ class NeuralNetwork:
         testing_accuracy = []
         m = []
         for i in range(len(X)):
-            if self.testSample(X[i],Y[i],thres_high,thres_low) == True:
+            if self.testSample(X[i],Y[i],way) == True:
                 m.append(1.0)
             else:
                 m.append(0.0)
         testing_accuracy = sum(m)/len(X)
-        
+
+        #verbose = True
         if verbose == True:
             for i in range(len(m)):
+                pred = self.predictProb(X[i])
                 if m[i] > 0.5:
                     print('X['+str(i)+']: passed')
+                    print('pred = ' + str(list(pred)))
+                    print('actual = ' + str(list(Y[i])))
+                    print()
                 else:
                     print('X['+str(i)+']: failed')
-        print('Testing Accuracy: ' + str(testing_accuracy))
+                    print('pred = ' + str(list(pred)))
+                    print('actual = ' + str(list(Y[i])))
+                    print()
+        print('Testing Accuracy: ' + str(testing_accuracy*100)[0:8]+'%')
         
         return testing_accuracy
             
-    def testSample(self,x,y,thres_high=0.8,thres_low=0.5):
-        """ Returns true if target probabibility is above thres_high, and
-            and non-target probabilities are below thres_low.
+    def testSample(self,x,y,way='max'):
+        """ Returns true prediction is correct
             Takes prediction of tested sample using probabilities from
             forward propagation.
+            way (string): (optional arg) comparison method for testing
+                            valid options are 'max','thres'
         """
         prob = self.forwardProp(x)[-1]
-        return self.compareProb(prob,y,thres_high,thres_low)
+        return self.compareProb(prob,y,way)
         
             
     def predictProb(self,x):
@@ -416,7 +438,7 @@ def neuralXorTest():
     Y = [[0],[1],[1],[0]]
     #J = []
 
-    net.trainWithPlots(X,Y,learning_rate=0.2,intervals=1000,thres_high=0.9,thres_low=0.5)
+    net.trainWithPlots(X,Y,learning_rate=0.2,intervals=1000,way='thres')
     for i in range(len(Y)):
         y_out = net.predictProb(X[i])
         print('Test Case: ' + str(X[i]) + ', Result: ' + str(y_out) )
