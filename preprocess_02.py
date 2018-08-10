@@ -76,7 +76,7 @@ def processFile(filename,length = 256,q=1,fs_in=8000,divide=4,plot=False):
         return 'failed'
     if fs1 != fs_in:
         raise ValueError('Sampling rate should be ' + str(fs_in) + ' for: ' + filename)
-    sig1 = sound[:,0] #left channel
+    sig1 = sound[:0] #left channel
     pre_emphasis = 0.97
     sig1 = np.append(sig1[0], sig1[1:] - pre_emphasis * sig1[:-1])
 
@@ -134,7 +134,7 @@ def processMPCC(filename,subsample=2048):
     #Setup
     try:
         fs, signal = wavfile.read(filename)  # File assumed to be in the same directory
-    except ValueError:
+    except ValueError or UnboundLocalError:
         print(filename + ' failed to process.')
         print('Failed Read')
         print()
@@ -165,11 +165,6 @@ def processMPCC(filename,subsample=2048):
     z = [0 for _ in range(padding-sig_len)]
     z = np.array(z)
     pad_sig = np.append(e_sig, z) # Pad Signal so frames equal size
-
-    temp = [i for i in range(fr_len)]
-    temp2 = [i*fr_step for i in range(num_fr * fr_step)]
-    temp = np.array(temp)
-    temp2 = np.array(temp2)
 
     #idx = np.tile(np.linspace(0, fr_len,fr_len), (num_fr, 1)) + np.tile(np.linspace(0, num_fr * fr_step, fr_step * num_fr), (fr_len, 1)).T
     #fr = pad_sig[idx]
