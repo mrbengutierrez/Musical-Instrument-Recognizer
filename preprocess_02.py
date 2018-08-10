@@ -43,19 +43,25 @@ import scipy.io.wavfile as wavfile
 import scipy.fftpack
 
 
-def processFile(filename,length = 1024,q=4,fs_in=44100,plot = False):
+def processFile(filename,length = 256,q=1,fs_in=8000,divide=4,plot=False):
     """returns one sided FFT amplitudes of filename
         filename (string): ex) 'sax.wav'
         length (int): Number of datapoints of one-sided fft (must be even,preferably a power of 2)
         q (int): (optional argument) Downsampling Rate 
         fs_in (int): (optional argument) throw ValueError if fs of filename != fs_in
+        divide (int): (optional argument) 1/divide*Nsamples is taken from FFT (preferably even)
         plot (bool): (optional argument) plots the one sided FFT if True, otherwise does not plot
         
-        Note: length < total_time*fs//(2*q)
-        Ex) length = 1024 < (0.25sec)*(44100Hz)//(2*4) = 1378
+        Note: length < total_time*fs//(2*q*divide)
+        Ex) length = 256 < (0.25sec)*(44100Hz)//(2*4*2) = 689
     """
+    length = length*divide
     #fs = sample rate, sound = multichannel sound signal
-    fs1, sound = wavfile.read(filename)
+    try:
+        fs1, sound = wavfile.read(filename)
+    except ValueError:
+        print('filename = ' + str(filename) + ' failed to process')
+        return 'failed'
     if fs1 != fs_in:
         raise ValueError('Sampling rate should be ' + str(fs_in) + ' for: ' + filename)
     sig1 = sound[:,0] #left channel
@@ -66,12 +72,15 @@ def processFile(filename,length = 1024,q=4,fs_in=44100,plot = False):
 
     FFT = abs(scipy.fft(sig3))
     FFT_side = FFT[range(len(FFT)//2)]
+    #freqs = scipy.fftpack.fftfreq(sig3.size, 1/fs2)
+    #plt.plot(freqs,FFT)
     if len(FFT_side) != length:
         print('ERROR MESSAGE DETAILS')
         print('filename: ' + filename)
         print('length = ' + str(length))
         print('fs_in = ' + str(fs_in))
         print('q = ' + str(q))
+        print('divide = ' + str(divide))
         total_time = len(sig1)/fs1
         print('total_time =  ' + str(total_time))
         print('Please check: length < total_time*fs//(2*q)')
@@ -85,13 +94,13 @@ def processFile(filename,length = 1024,q=4,fs_in=44100,plot = False):
         temp.append(value/sum(FFT_side))
     FFT_side = np.array(temp)
     if plot == True:
-        freqs = scipy.fftpack.fftfreq(sig3.size, Ts4)
-        freqs_side = np.array(freqs[range(N4//2)])
+        freqs = scipy.fftpack.fftfreq(sig3.size, 1/fs2)
+        freqs_side = np.array(freqs[range(len(FFT)//2)])
         plt.plot(freqs_side,FFT_side) # plotting the complete fft spectrum
         plt.show()
  
     #print(len(FFT_side))
-    return FFT_side
+    return FFT_side[range(length//4)]
 
 
 
@@ -211,7 +220,7 @@ class Preprocess:
         
         
 
-    def processData(self,data_file,directory,comment = '',length = 1024,q=4,fs_in=44100):
+    def processData(self,data_file,directory,comment = '',length=256,q=1,fs_in=8000,divide=4):
         """Processes the data in directory and stores it in data_file
             directory (string): folder of data to be processed
             data_file (string): name of file for data to be stored ex) data.txt
@@ -253,15 +262,19 @@ class Preprocess:
             self.output[name] = np.array(temp)
             i +=1
 
-
+        length1 = length
+        q1 = q 
+        divide1 = divide
+        fs_in1 = fs_in
         #self.X = [] # list of input vectors
         #self.Y = [] # list of output vectors
         for name in self.dirs:
             t1 = time.time()
             for file in self.files[name]:
-                input_vector = processFile(file,length = 1024,q=4,fs_in=44100,plot = False,)
-                self.X.append(input_vector)
-                self.Y.append(self.output[name])
+                input_vector = processFile(file,length=length1,q=q1,fs_in=fs_in1,divide=divide1,plot = False)
+                if input_vector != 'failed':
+                    self.X.append(input_vector)
+                    self.Y.append(self.output[name])
             print('Time take to process '+str(name)+ ': ' + str((time.time()-t1)/60) + 'min')
 
         # Now we can store all of the data in a json
@@ -316,12 +329,16 @@ class Preprocess:
 
 def main():
     # Note: Preprocessed data should be in folder preprocessed
+    input_length = 256
     P = Preprocess()
-    P.processData('preprocessed/test_01.txt',directory='phil_temp_03',comment = 'Hello World')
-    #P.loadData('preprocessed/rohan_02.rtf')
+    P.processData('preprocessed/processed_01.txt',directory='instruments',fs_in=8000,length=input_length,q=1,divide=1,comment = 'Instrument Data')
+    #P.loadData('preprocessed/test_01.txt')
     X, Y = P.getXY()
-    net = NN.NeuralNetwork([1024,256,64,12],'sigmoid')
+    net = NN.NeuralNetwork([input_length,64,12],'sigmoid')
+    net.storeWeights('weights/weights_01')
+    net.loadWeights('weights/weights_01')
     net.trainWithPlots(X,Y,learning_rate=0.01,intervals = 10)
+    net.testBatch(X,Y)
 
     # Test print functions, these print statements can be used to figure
     # out how to use code

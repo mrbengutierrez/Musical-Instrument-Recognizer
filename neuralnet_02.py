@@ -173,7 +173,6 @@ class NeuralNetwork:
                 stored_weights[i].append([])
                 for value in self.theta[i][j]:
                     stored_weights[i][j].append(float(value))
-        print(stored_weights)
         data = {}
         data['theta'] = stored_weights
         data['layers'] = self.layers
