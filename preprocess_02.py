@@ -188,41 +188,41 @@ def processMPCC(filename,subsample=2048):
 
     #Filter Banks
     nfilt = 40
-    low_freq_mel = 0
-    high_freq_mel = (2595 * np.log10(1 + (fs / 2) / 700))  # Convert Hz to Mel
-    mel_points = np.linspace(low_freq_mel, high_freq_mel, nfilt + 2)  # Equally spaced in Mel scale
+    f_low = 0
+    f_high = (2595 * np.log10(1 + (fs / 2) / 700))  # Convert Hz to Mel
+    mel_points = np.linspace(f_low, f_high, nfilt + 2)  # Equally spaced in Mel scale
     hz_points = (700 * (10**(mel_points / 2595) - 1))  # Convert Mel to Hz
-    bin = np.floor((NFFT + 1) * hz_points / fs)
+    b = np.floor((NFFT + 1) * hz_points / fs) #bin
 
     fbank = np.zeros((nfilt, int(np.floor(NFFT / 2 + 1))))
-    for m in range(1, nfilt + 1):
-        f_m_minus = int(bin[m - 1])   # left
-        f_m = int(bin[m])             # center
-        f_m_plus = int(bin[m + 1])    # right
+    for i in range(1, nfilt + 1):
+        f_m_minus = int(b[i - 1])   # left
+        f_m = int(b[i])             # center
+        f_m_plus = int(b[i + 1])    # right
 
-        for k in range(f_m_minus, f_m):
-            fbank[m - 1, k] = (k - bin[m - 1]) / (bin[m] - bin[m - 1])
-        for k in range(f_m, f_m_plus):
-            fbank[m - 1, k] = (bin[m + 1] - k) / (bin[m + 1] - bin[m])
-    filter_banks = np.dot(pow_frames, fbank.T)
-    filter_banks = np.where(filter_banks == 0, np.finfo(float).eps, filter_banks)  # Numerical Stability
-    filter_banks = 20 * np.log10(filter_banks)  # convert to dB
+        for j in range(f_m_minus, f_m):
+            fbank[i - 1, j] = (j - b[i - 1]) / (b[i] - b[i - 1])
+        for j in range(f_m, f_m_plus):
+            fbank[i - 1, j] = (b[i + 1] - j) / (b[i + 1] - b[i])
+    fb = np.dot(pow_fr, np.transpose(fbank)) # filter banks
+    fb = np.where(fb == 0, np.finfo(float).eps, fb)  # Numerical Stability
+    fb = 20 * np.log10(fb)  # convert to dB
 
     #Mel-frequency Cepstral Coefficients (MFCCs)
     num_ceps = 12
-    mfcc = dct(filter_banks, type=2, axis=1, norm='ortho')[:, 1 : (num_ceps + 1)] # Keep 2-13
+    mfcc = dct(fb, type=2, axis=1, norm='ortho')[:, 1 : (num_ceps + 1)] # Keep 2-13
 
     #Sinusoidal Filtering
-    cep_lifter = 22 # dim of MFCC vector
-    (nframes, ncoeff) = mfcc.shape
-    n = np.arange(ncoeff)
-    lift = 1 + (cep_lifter / 2) * np.sin(np.pi * n / cep_lifter)
-    mfcc *= lift  #*
+    c_lift = 22 # dim of MFCC vector
+    (n_fr, n_coeff) = mfcc.shape #number of frames number of coeff
+    ncoeff_array = np.arange(n_coeff)
+    lift = 1 + (c_lift / 2) * np.sin(np.pi * ncoeff_array / c_lift)
+    mfcc = mfcc * lift  
 
     #Mean Normalization
     epsilon = 1e-8
-    for i in range(len(filter_banks)):
-        filter_banks[i] -= mean(filter_banks) + epsilon
+    for i in range(len(fb)):
+        fb[i] -= mean(fb) + epsilon
     for i in range(len(mfcc)):
         mfcc[i] -= mean(mfcc) + epsilon
 
@@ -378,12 +378,21 @@ class Preprocess:
             directory (string): folder of data to be processed
             data_file (string): name of file for data to be stored ex) data.txt
             comment (string): optional message to be stored with data
+
+            way = 'fft',  opts is a list containing
             length (int): Number of datapoints of one-sided fft (must be even,preferably a power of 2)
             q (int): Downsampling Rate (must be even, preferably power of 2)
-            fs_in (int): (optional argument) throw ValueError if fs of filename != fs_i
+            fs_in (int):  throw ValueError if fs of filename != fs_i
+            divide (int):  1/divide*Nsamples is taken from FFT (preferably even)
+            plot (bool): ( plots the one sided FFT if True, otherwise does not plot            
         
             Note: length < total_time*fs/(q)
             Ex) length = 1024 < (0.25sec)*(44100Hz)/(4) = 2756
+
+
+            way = 'mpcc', opts is a list containing
+            subsample (int) = Number of subsamples to take from audio file.
+            
         """
         self.dirs = [name for name in os.listdir(directory)
             if os.path.isdir(os.path.join(directory, name))]
@@ -423,9 +432,9 @@ class Preprocess:
             for file in self.files[name]:
                 #input_vector = processFile(file,length=length1,q=q1,fs_in=fs_in1,divide=divide1,plot = False)
                 if way == 'mpcc':
-                    input_vector = processMPCC(file,opt[0])
+                    input_vector = processMPCC(file,*opt)
                 elif way == 'fft':
-                    input_vector = processFFT(file)
+                    input_vector = processFFT(file,*opt)
                 else:
                     raise ValueError('Invalid Way, valid types include: \'mpcc\' or \'fft\'')
                 if input_vector != 'failed':
@@ -496,7 +505,9 @@ def main():
     X, Y = P.getXY()
     print('Input Layer Length: ' + str(len(X[0])))
     print('Output Layer Length: ' + str(len(Y[0])))
-    net = NN.NeuralNetwork([len(X[0]),100,len(Y[0])],'sigmoid')
+    input_size = P.getInputLength()
+    output_size = P.getOutputLength()
+    net = NN.NeuralNetwork([input_size,100,output_size],'sigmoid')
     net.storeWeights('weights/weights_01')
     #net.loadWeights('weights/weights_01')
     net.trainWithPlots(X,Y,learning_rate=1,intervals = 100,way='max')
