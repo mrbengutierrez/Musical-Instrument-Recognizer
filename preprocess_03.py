@@ -1,24 +1,17 @@
 """
 DESCRIPTION
 Preprocesses audio data before sending to Neural Network
-
 See demo in in main()
-
-
 MIT License
-
 Copyright (c) 2018  The-Instrumental-Specialists
-
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
-
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
-
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -76,7 +69,7 @@ def processFile(filename,length = 256,q=1,fs_in=8000,divide=4,plot=False):
         return 'failed'
     if fs1 != fs_in:
         raise ValueError('Sampling rate should be ' + str(fs_in) + ' for: ' + filename)
-    sig1 = sound[:,0] #left channel
+    sig1 = sound[:0] #left channel
     pre_emphasis = 0.97
     sig1 = np.append(sig1[0], sig1[1:] - pre_emphasis * sig1[:-1])
 
@@ -134,7 +127,7 @@ def processMPCC(filename,subsample=2048):
     #Setup
     try:
         fs, signal = wavfile.read(filename)  # File assumed to be in the same directory
-    except:
+    except ValueError or UnboundLocalError:
         print(filename + ' failed to process.')
         print('Failed Read')
         print()
@@ -147,10 +140,7 @@ def processMPCC(filename,subsample=2048):
         print('N too small, N: ' + str(len(signal)) + ', subsample: ' + str(subsample))
         print()
         return 'failed'
-    try:
-        sig = signal[:,0] #get first channel
-    except:
-        sig = signal
+    sig = signal[:,0] #get first channel
     
     #Pre-Emphasis
     pre_emphasis = 0.97
@@ -376,7 +366,6 @@ class Preprocess:
             directory (string): folder of data to be processed
             data_file (string): name of file for data to be stored ex) data.txt
             comment (string): optional message to be stored with data
-
             way = 'fft',  opts is a list containing
             length (int): Number of datapoints of one-sided fft (must be even,preferably a power of 2)
             q (int): Downsampling Rate (must be even, preferably power of 2)
@@ -386,8 +375,6 @@ class Preprocess:
         
             Note: length < total_time*fs/(q)
             Ex) length = 1024 < (0.25sec)*(44100Hz)/(4) = 2756
-
-
             way = 'mpcc', opts is a list containing
             subsample (int) = Number of subsamples to take from audio file.
             
@@ -498,23 +485,18 @@ def main():
     #raise Exception
     P = Preprocess()
     #P.processData('preprocessed/processed_01.txt',directory='instruments_07',fs_in=8000,length=input_length,q=1,divide=1,comment = 'Instrument Data')
-    P.processData('preprocessed/training_02.txt',directory='instr_train_19',way='mpcc',opt = [2048])
-    P.loadData('preprocessed/training_02.txt')
+    P.processData('preprocessed/processed_01.txt',directory='instruments_03',way='mpcc',opt = [2048])
+    P.loadData('preprocessed/processed_01.txt')
     X, Y = P.getXY()
     print('Input Layer Length: ' + str(len(X[0])))
     print('Output Layer Length: ' + str(len(Y[0])))
     input_size = P.getInputLength()
     output_size = P.getOutputLength()
     net = NN.NeuralNetwork([input_size,100,output_size],'sigmoid')
-    #net.storeWeights('weights/weights_01')
-    net.loadWeights('weights/weights_01')
-    #net.trainWithPlots(X,Y,learning_rate=1,intervals = 100,way='max')
-
-    Q = Preprocess()
-    Q.processData('preprocessed/testing_02.txt',directory='instr_test_19',way='mpcc',opt=[2048])
-    Q.loadData('preprocessed/testing_02.txt')
-    tX, tY = Q.getXY()
-    net.testBatch(tX,tY)
+    net.storeWeights('weights/weights_01')
+    #net.loadWeights('weights/weights_01')
+    net.trainWithPlots(X,Y,learning_rate=1,intervals = 100,way='max')
+    net.testBatch(X,Y)
 
     # Test print functions, these print statements can be used to figure
     # out how to use code
