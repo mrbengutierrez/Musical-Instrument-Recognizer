@@ -160,9 +160,11 @@
   First, we applied a pre-emphasis filter on our audio signal. The pre-emphasis filter helps to balance the frequency spectrum by weighting higher frequencies. Higher frequencies tend to to have much smaller magnitudes than lower ones.
   </p>
   
-  <p>
+  <p><b><u>
   pre-emphasis filter (a=filter coefficient - 0.95 or 0.97)
-  </p>
+  </u></b></p>
+  
+  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/eqn1_24.PNG" alt="Pre-Emphasis Equation">
   
   <p>
   After apply a pre-emphasizing filter, we split the signal into separate time frames. The frequency of the signal changes over time, and by splitting the data into time frames we can can capture this additional frequency content.
@@ -255,9 +257,9 @@
   
   <table>
     <tr>
-	  <th>Intervals</th>
-	  <th>Training Accuracy</th>
-	  <th>Testing Accuracy</th>
+	  <td>Intervals</td>
+	  <td>Training Accuracy</td>
+	  <td>Testing Accuracy</td>
 	</tr>
     <tr>
 	  <td>20</td>
@@ -268,7 +270,6 @@
 	  <td>40</td>
 	  <td>77.6%</td>
 	  <td>70%</td>
-	
 	</tr>
 	  <td>45</td>
 	  <td>76.4%</td>
@@ -322,7 +323,12 @@
 	Mitra, Vikramjit, et al. <q>Robust Features in Deep-Learning-Based Speech Recognition.</q> <i>New Era for Robust Speech Recognition</i>, 2017, pp. 187 to 217., doi:10.1007/978-3-319-64680-0_8.
 	</p></li>
 	<li><p>
-	Yoshioka, T., and M.j.f. Gales. <q>Environmentally Robust ASR Front-End for Deep Neural Network Acoustic Models.</q> <i>Computer Speech & Language</i>, vol. 31, no. 1, 2014, pp. 65 to 86., doi:10.1016/j.csl.2014.11.008.
+	Yoshioka, T., and M.j.f. Gales. <q>Environmentally Robust ASR Front-End for Deep Neural Network Acoustic Models.</q> <i>Computer Speech & Language</i>, vol. 31, no. 1, 2014, pp. 65 to 86., sdoi:10.1016/j.csl.2014.11.008.
 	</p></li>
   </ol>
   
+
+  
+
+  
+s
