@@ -89,8 +89,22 @@
  
 <h2 id="code">Code</h2>
   <p>
-    Please open api.py to see the Application Program Interface for the Musical Instrument Decoder software. Please look at the demos in main to learn how to use the code. The demos will be replicated below.
+    Please open api.py to see the Application Program Interface for the Musical Instrument Decoder software. Please look at the demos in the main function in api.py to learn how to use the code. The demos will be replicated below.
   </p>
+
+  <p><b><u>
+  XOR Example Code
+  </u></b></p>
+  
+  <img src="images/31_xor_code.PNG" alt="XOR Example Code">
+  
+  <p><b><u>
+  XOR Example Output
+  </u></b></p>
+  
+  <img src="images/32_xor_output.PNG" alt="XOR Example Code">
+  <img src="images/33_xor_output.PNG" alt="XOR Example Code">
+  <img src="images/34_xor_output.PNG" alt="XOR Example Code">
 
  
 
@@ -164,7 +178,7 @@
   Pre-Emphasis Filter (a=filter coefficient - 0.95 or 0.97)
   </u></b></p>
   
-  <img src="images/26_eqn1.PNG" alt="Pre-Emphasis FilterS">
+  <img src="images/26_eqn1.PNG" alt="Pre-Emphasis Filters">
   
   <p>
   After apply a pre-emphasizing filter, we split the signal into separate time frames. The frequency of the signal changes over time, and by splitting the data into time frames we can can capture this additional frequency content.
@@ -195,14 +209,10 @@
   </p>
 
   <p><b><u>
-    <p><b><u>
-  Cost Function
-  </u></b></p>
+  Filter Bank Equations
   </u></b></p>
   
-  <img src="images/29_eqn4.PNG" alt="  <p><b><u>
-  Cost Function
-  </u></b></p>">
+  <img src="images/29_eqn4.PNG" alt="Filter Bank Equations">
  
   <p>
   We then applied the discrete time cosine transform (DCT). The DCT helps to decorrelate the mel-frequency cepstral ceofficients (MFCCs). We chose to use the lower 12 MFCCs because higher coefficients represent fast changes in frequency between two adjacent time frames. The frequency content from musical instrument signal should not be changing rapidly between time frames.
