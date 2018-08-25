@@ -7,25 +7,25 @@
 	<li><a href="#abstract"><b>Abstract</b></a></li>
 	<li><a href="#introduction"><b>Introduction</b></a></li>
 	<li><a href="#methods"><b>Methods</b></a>
-	  <ol>
+	  <ul>
 	    <li><a href="#dataset"><b>Dataset</b></a></li>
 		<li><a href="#preprocessing 1"><b>Preprocessing</b></a></li>
 		<li><a href="#neural network"><b>Neural Network</b></a></li>
-	  </ol>
+	  </ul>
 	</li>
 	<li><a href="#experiments"><b>Experiments and Results</b></a>
-	  <ol>
+	  <ul>
 	    <li><a href="#preprocessing 2"><b>Preprocessing</b></a></li>
 		<li><a href="#instrument number"><b>Number of Instruments</b></a></li>
 		<li><a href="#pitch"><b>Pitch Training and Testing</b></a></li>
-	  </ol>
+	  </ul>
 	</li>
 	</li>
 	<li><a href="#conclusion"><b>Conclusion</b></a>
-	  <ol>
+	  <ul>
 	    <li><a href="#acknowledgments"><b>Acknowledgments</b></a></li>
 		<li><a href="#references"><b>References</b></a></li>
-	  </ol>
+	  </ul>
 	</li>
   </ol>
   
@@ -45,7 +45,7 @@
     </li>
 	<li>Talked about preprocessing in final presentation</li>
 	<li>Wrote about preprocessing and neural network in final paper</li>
-	<li>Maintains the project for future updates</li>
+	<li>Maintains the repository project for future updates</li>
   </ul>
   
 <h3><strong>Ellen Mak</strong></h3>
@@ -63,7 +63,7 @@
         <li>Generated plots of models of interest</li>
 	  </ul>
 	</li>
-	<li>Wrote about training and testing the data in the final paper
+	<li>Wrote about experiments,results, and conclusion in the final paper
 	  <ul>
 	    <li>Also formatted all plots, reference, and style in latex NIPS format</li>
       </ul>
@@ -161,10 +161,10 @@
   </p>
   
   <p><b><u>
-  pre-emphasis filter (a=filter coefficient - 0.95 or 0.97)
+  Pre-Emphasis Filter (a=filter coefficient - 0.95 or 0.97)
   </u></b></p>
   
-  <img src="images/26_eqn1.PNG" alt="Pre-Emphasis Equation">
+  <img src="images/26_eqn1.PNG" alt="Pre-Emphasis FilterS">
   
   <p>
   After apply a pre-emphasizing filter, we split the signal into separate time frames. The frequency of the signal changes over time, and by splitting the data into time frames we can can capture this additional frequency content.
@@ -174,23 +174,35 @@
   Next, we applied a hamming window to each of the time frames. The FFT assumes that the signal is infinitely periodic. If the ends of the time signal do not match up, the signal will contain some additional high frequency noise not presence in the original signal. The hamming window helps correct that by bringing the ends of the time signal closer together. 
   </p>
   
+  <p><b><u>
+  Hamming Window
+  </u></b></p>  
+  
   <img src="images/27_eqn2.PNG" alt="Hamming Window">
   
   <p>
   Next we took the FFT of each frame to get the frequency content for each frame. Next we took the spectral density for each time frame. This describes the distribution of power of each of the frequency components in the signal. 
   </p>
   
-  <p>
-  power spectrum (N typically 256 or 512)
-  </p>
+  <p><b><u>
+  Power Spectrum Equation (N typically 256 or 512)
+  </u></b></p>
   
-  <img src="images/28_eqn3.PNG" alt="Power Equation">  
+  <img src="images/28_eqn3.PNG" alt="Power Spectrum Equation">  
   
   <p>
   In our next step, we created filter banks using triangular filter in order to transform the frequencies the spectral density to their corresponding frequency bands. We used the Mel-scale because it distinguishes higher frequency stronger than lower frequencies. Once we applied the filter bank across each of the power frames obtained a spectrogram with frequency along one axis and time along another axis. The equations below are the triangular filters applied to each of the power frames.
   </p>
- 
-  <img src="images/29_eqn4.PNG" alt="Filter bank Equations">
+
+  <p><b><u>
+    <p><b><u>
+  Cost Function
+  </u></b></p>
+  </u></b></p>
+  
+  <img src="images/29_eqn4.PNG" alt="  <p><b><u>
+  Cost Function
+  </u></b></p>">
  
   <p>
   We then applied the discrete time cosine transform (DCT). The DCT helps to decorrelate the mel-frequency cepstral ceofficients (MFCCs). We chose to use the lower 12 MFCCs because higher coefficients represent fast changes in frequency between two adjacent time frames. The frequency content from musical instrument signal should not be changing rapidly between time frames.
@@ -225,7 +237,7 @@
   Cost Function
   </u></b></p>
   
-  <img src="Musical-Instrument-Decoder/images/30_eqn5.PNG" alt="Cost Equation">
+  <img src="images/30_eqn5.PNG" alt="Cost Function">
   
   <p>
     <i>J</i>: Cost of weight matrix <i>theta</i><br>
