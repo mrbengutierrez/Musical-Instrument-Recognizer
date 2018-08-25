@@ -73,30 +73,28 @@ body {background-color: white;}
       </ul>
   </section>
  
- <section>
-   <header><h2>Code</h2></header>
-   <p>
-   Please open api.py to see the Application Program Interface for the Musical Instrument Decoder software. Please look at the demos in main to learn how to use the code. The demos will be replicated below.
-   </p>
-	
-	
- </section>
+  <section>
+    <header><h2>Code</h2></header>
+    <p>
+    Please open api.py to see the Application Program Interface for the Musical Instrument Decoder software. Please look at the demos in main to learn how to use the code. The demos will be replicated below.
+    </p>
+  </section>
  
   <section>
     <header><h2>Abstract</h2></header>
       <p>
-	
+	  Hi
       </p>
   </section>
   
   <section>	
     <header><h2>Introduction</h2></header>
-      <p>
- 
-      </p>
+    <p>
+    Hi
+    </p>
   
     <p>
-   
+    Hi
     </p>
   </section>
   
