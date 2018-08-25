@@ -1,22 +1,11 @@
 <html>
-<head>
-<style>
-body {background-color: white;}
-</style>
-</head>
-<body>
 
-  <nav>
-    <header><h2>Table of Contents</h2></header>
+  <h2>Table of Contents</h2>
     <ol>
 	  <li><a href="#Contributors"><b>Contributors</b></a></li>
-	</ol>
-  </nav>
-
-  <section id="Contributors">
-    <header>
-	  <h2>Contributors</h2>
-	</header>
+    </ol>
+  
+    <h2 id="Contributors">Contributors</h2>
     <i><strong>AKA The Instrumental Specialists</strong> </i>
   
     <h3><strong>Ben Gutierrez</strong></h3>
@@ -73,33 +62,27 @@ body {background-color: white;}
 		  </ul>
 	    </li>
       </ul>
-  </section>
  
-  <section>
-    <header><h2>Code</h2></header>
+  <h2>Code</h2>
     <p>
     Please open api.py to see the Application Program Interface for the Musical Instrument Decoder software. Please look at the demos in main to learn how to use the code. The demos will be replicated below.
     </p>
-  </section>
+
  
-  <section>
-    <header><h2>Abstract</h2></header>
-      <p>
-	  Hi
-      </p>
-  </section>
-  
-  <section>	
-    <header><h2>Introduction</h2></header>
+
+  <h2>Abstract</h2>
     <p>
-    Hi
-    </p>
-  
-    <p>
-    Hi
-    </p>
-  </section>
+	Hi
+	</p>
   
 
-</body>
+  <h2>Introduction</h2>
+    <p>
+	Hi
+	</p>
+  
+    <p>
+    Hi
+    </p>
+  
 </html>
