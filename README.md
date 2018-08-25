@@ -14,7 +14,9 @@ body {background-color: white;}
   </nav>
 
   <section id="Contributors">
-    <header><h2>Contributors</h2></header>
+    <header>
+	  <h2>Contributors</h2>
+	</header>
     <i><strong>AKA The Instrumental Specialists</strong> </i>
   
     <h3><strong>Ben Gutierrez</strong></h3>
