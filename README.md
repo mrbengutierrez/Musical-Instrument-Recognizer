@@ -106,81 +106,130 @@ neuralnet_01.py is a large neuralnet
 )
 
 
-<dl>
-  <dt>Definition list</dt>
-  <dd>Is something people use sometimes.</dd>
-
-  <dt>Markdown in HTML</dt>
-  <dd>Does *not* work **very** well. Use HTML <em>tags</em>.</dd>
-</dl>
-
-
 <html>
 <head>
 <style>
-body {background-color: powderblue;}
-h2   {color: blue;}
-#p    {color: red;}
+body {background-color: white;}
 </style>
 </head>
 <body>
 
-  <h2>Contributors</h2>
-  <i> AKA The Instrumental Specialists </i>
-  <h3>Ben Gutierrez</h3>
-    <ul>   
-      <li>Wrote all project code, including:
-	    <ul>
-	      <li>preprocess.py</li>
-		  <li>neuralnet.py</li>
-		  <li>note_sorter.py</li>
-		  <li>api.py</li>
-		</ul>
-      </li>
-	  <li>Talked about preprocessing in final presentation</li>
-	  <li>Wrote about preprocessing and neural network in final paper</li>
-	  <li>Maintains the project for future updates</li>
-	</ul>
-  <ul>
-    <li><em>Ellen Mak</em></li>
-      <li>Contributed substantially to final presentation
-	    <ul>
-	      <li>Answered all class questions</li>
-		  <li>Wrote the PowerPoint talking notes</li>
-		</ul>
-	  </li>
-	  <li>Trained and tested instrumental data
-	    <ul>
-	      <li>Tuned neural network parameters to get a good model for the data</li>
-		  <li>Generated plots of models of interest</li>
-		</ul>
-	  </li>
-	  <li>Wrote about training and testing the data in the final paper
-	    <ul>
-	      <li>Also formatted all plots, reference, and style in latex NIPS format</li>
-		</ul>
-	  </li>
-    <li><em>Rohan Pahwa</em></li>
-      <li>Contributed to final presentation
-	    <ul>
-	      <li>Talked about overall process, dataset, and introduction</li>
-		</ul>
-	  </li>
-      <li>Wrote introduction and abstract for final paper</li>
-	  <li>Trained and tested notes data
-	    <ul>
-	      <li>Tuned neural network parameters to get a good model for the data</li>
-		  <li>Generated plots of models of interest</li>
-		</ul>
-	  </li>
-  </ul>
+  <nav>
+    <header><h2>Table of Contents</h2></header>
+    <ol>
+	  <li><a href="#Contributors"><b>Contributors</b></a></li>
+	</ol>
+  </nav>
+
+  <section id="Contributors">
+    <header><h2>Contributors</h2></header>
+    <i><strong>AKA The Instrumental Specialists</strong> </i>
   
-</body>
-</html>
+    <h3><strong>Ben Gutierrez</strong></h3>
+    <i>Massachusetts Institute of Technology</i>
+      <ul>   
+        <li>Wrote all project code, including:
+	      <ul>
+	        <li>preprocess.py</li>
+		    <li>neuralnet.py</li>
+		    <li>note_sorter.py</li>
+		    <li>api.py</li>
+		  </ul>
+        </li>
+	    <li>Talked about preprocessing in final presentation</li>
+	    <li>Wrote about preprocessing and neural network in final paper</li>
+	    <li>Maintains the project for future updates</li>
+	  </ul>
+  
+    <h3><strong>Ellen Mak</strong></h3>
+    <i>Boston University</i>
+	  <ul>
+        <li>Contributed substantially to final presentation
+	      <ul>
+	        <li>Answered all class questions</li>
+		    <li>Wrote the PowerPoint talking notes</li>
+		  </ul>
+	    </li>
+	    <li>Trained and tested instrumental data
+	      <ul>
+	        <li>Tuned neural network parameters to get a good model for the data</li>
+		    <li>Generated plots of models of interest</li>
+		  </ul>
+	    </li>
+	    <li>Wrote about training and testing the data in the final paper
+	      <ul>
+	        <li>Also formatted all plots, reference, and style in latex NIPS format</li>
+		  </ul>
+	    </li>
+	  </ul>
+	
+    <h3><strong>Rohan Pahwa</strong></h3>
+    <i>Boston College</i>
+	  <ul>
+        <li>Contributed to final presentation
+	      <ul>
+	        <li>Talked about overall process, dataset, and introduction</li>
+		  </ul>
+	    </li>
+        <li>Wrote introduction and abstract for final paper</li>
+	    <li>Trained and tested notes data
+	      <ul>
+	        <li>Tuned neural network parameters to get a good model for the data</li>
+		    <li>Generated plots of models of interest</li>
+		  </ul>
+	    </li>
+      </ul>
+  </section>
+ 
+ <section>
+   <header><h2>Code</h2></header>
+   <p>
+   Please open api.py to see the Application Program Interface for the Musical Instrument Decoder software. Please look at the demos in main to learn how to use the code. The demos will be replicated below.
+   </p>
+   
+   <div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">    <span style="color: #DD4422">&quot;&quot;&quot;Training NeuralNet to learn the boolean XOR function&quot;&quot;&quot;</span>
+    
+    <span style="color: #888888"># Initialize Neural Network with tanh activation function,</span>
+    <span style="color: #888888"># with with an input layer of size 2, one hidden layer of size 2,</span>
+    <span style="color: #888888"># and one output layer of size 1</span>
+    net <span style="color: #333333">=</span> NeuralNetwork([<span style="color: #0000DD; font-weight: bold">2</span>,<span style="color: #0000DD; font-weight: bold">2</span>,<span style="color: #0000DD; font-weight: bold">1</span>],<span style="background-color: #fff0f0">&#39;tanh&#39;</span>)
 
+    <span style="color: #888888"># XOR Training and Test Data</span>
+    X <span style="color: #333333">=</span> [[<span style="color: #0000DD; font-weight: bold">0</span>,<span style="color: #0000DD; font-weight: bold">0</span>],[<span style="color: #0000DD; font-weight: bold">1</span>,<span style="color: #0000DD; font-weight: bold">0</span>],[<span style="color: #0000DD; font-weight: bold">0</span>,<span style="color: #0000DD; font-weight: bold">1</span>],[<span style="color: #0000DD; font-weight: bold">1</span>,<span style="color: #0000DD; font-weight: bold">1</span>]];
+    Y <span style="color: #333333">=</span> [[<span style="color: #0000DD; font-weight: bold">0</span>],[<span style="color: #0000DD; font-weight: bold">1</span>],[<span style="color: #0000DD; font-weight: bold">1</span>],[<span style="color: #0000DD; font-weight: bold">0</span>]]
 
+    <span style="color: #888888"># Train with plots</span>
+    net<span style="color: #333333">.</span>trainWithPlots(X,Y,learning_rate<span style="color: #333333">=</span><span style="color: #6600EE; font-weight: bold">0.2</span>,intervals<span style="color: #333333">=</span><span style="color: #0000DD; font-weight: bold">1000</span>,way<span style="color: #333333">=</span><span style="background-color: #fff0f0">&#39;thres&#39;</span>)
 
+    <span style="color: #888888"># Store, load, print weights</span>
+    net<span style="color: #333333">.</span>storeWeights(<span style="background-color: #fff0f0">&#39;weights/XOR.txt&#39;</span>,comment<span style="color: #333333">=</span><span style="background-color: #fff0f0">&#39;XOR DATA&#39;</span>)
+    net<span style="color: #333333">.</span>loadWeights(<span style="background-color: #fff0f0">&#39;weights/XOR.txt&#39;</span>)
+    net<span style="color: #333333">.</span>printWeights()
 
+    <span style="color: #888888"># test XOR data</span>
+    net<span style="color: #333333">.</span>testBatch(X,Y,verbose<span style="color: #333333">=</span><span style="color: #007020">True</span>)
 
+    <span style="color: #888888"># Predict Data</span>
+    net<span style="color: #333333">.</span>predictProb([<span style="color: #0000DD; font-weight: bold">0</span>,<span style="color: #0000DD; font-weight: bold">0</span>]) <span style="color: #888888"># predict probability</span>	</pre></div>
 
-
+	
+	
+ </section>
+ 
+  <section>
+    <header><h2>Abstract</h2></header>
+      <p>
+	
+      </p>
+  </section>
+  
+  <section>	
+    <header><h2>Introduction</h2></header>
+      <p>
+ 
+      </p>
+  
+    <p>
+   
+    </p>
+  </section>
