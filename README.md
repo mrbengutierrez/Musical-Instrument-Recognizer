@@ -107,19 +107,7 @@ neuralnet_01.py is a large neuralnet
 
 
 <html>
-<head>
-<style>
-body {background-color: white;}
-</style>
-</head>
 <body>
-
-  <nav>
-    <header><h2>Table of Contents</h2></header>
-    <ol>
-	  <li><a href="#Contributors"><b>Contributors</b></a></li>
-	</ol>
-  </nav>
 
   <section id="Contributors">
     <header><h2>Contributors</h2></header>
@@ -207,7 +195,6 @@ body {background-color: white;}
    
     </p>
   </section>
-  
 
 </body>
 </html>
