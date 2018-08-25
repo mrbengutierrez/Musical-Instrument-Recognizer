@@ -30,9 +30,35 @@ preprocess_02.py handles the processing of all of the data.
 neuralnet_01.py is a large neuralnet
 
 # Musical-Instrument-Decoder ##
-## Ben Gutierrez, Ellen Mak, Rohan Pahwa ##
 
-## AKA **The Instrumental Specialists** ##
+### Contributors AKA **The Instrumental Specialists** ###
+* Ben Gutierrez
+    * Wrote all project code, including:
+	    * preprocess.py
+		* neuralnet.py
+		* note_sorter.py
+		* api.py
+	* Talked about preprocessing in final presentation
+	* Wrote about preprocessing and neural network in final paper
+	* Maintains the project for future updates
+* Ellen Mak
+    * Contributed substantially to final presentation
+	    * Answered all class questions
+		* Wrote the PowerPoint talking notes
+	* Trained and tested instrumental data
+	    * Tuned neural network parameters to get a good model for the data
+		* Generated plots of models of interest
+	* Wrote about training and testing the data in the final paper
+	    * Also formatted all plots, reference, and style in latex NIPS format
+* Rohan Pahwa
+    * Contributed to final presentation
+	    * Talked about overall process, dataset, and introduction
+    * Wrote introduction and abstract for final paper
+	* Trained and tested notes data
+	    * Tuned neural network parameters to get a good model for the data
+		* Generated plots of models of interest
+
+
 
 ### Introduction ###
 * Identify which instrument is playing
