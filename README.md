@@ -114,7 +114,7 @@ neuralnet_01.py is a large neuralnet
   <dd>Does *not* work **very** well. Use HTML <em>tags</em>.</dd>
 </dl>
 
-```html
+
 <html>
 <head>
 <style>
@@ -177,7 +177,7 @@ h2   {color: blue;}
   
 </body>
 </html>
-```
+
 
 
 
