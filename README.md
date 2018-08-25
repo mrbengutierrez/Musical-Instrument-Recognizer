@@ -186,32 +186,6 @@ body {background-color: white;}
    <p>
    Please open api.py to see the Application Program Interface for the Musical Instrument Decoder software. Please look at the demos in main to learn how to use the code. The demos will be replicated below.
    </p>
-   
-   <div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">    <span style="color: #DD4422">&quot;&quot;&quot;Training NeuralNet to learn the boolean XOR function&quot;&quot;&quot;</span>
-    
-    <span style="color: #888888"># Initialize Neural Network with tanh activation function,</span>
-    <span style="color: #888888"># with with an input layer of size 2, one hidden layer of size 2,</span>
-    <span style="color: #888888"># and one output layer of size 1</span>
-    net <span style="color: #333333">=</span> NeuralNetwork([<span style="color: #0000DD; font-weight: bold">2</span>,<span style="color: #0000DD; font-weight: bold">2</span>,<span style="color: #0000DD; font-weight: bold">1</span>],<span style="background-color: #fff0f0">&#39;tanh&#39;</span>)
-
-    <span style="color: #888888"># XOR Training and Test Data</span>
-    X <span style="color: #333333">=</span> [[<span style="color: #0000DD; font-weight: bold">0</span>,<span style="color: #0000DD; font-weight: bold">0</span>],[<span style="color: #0000DD; font-weight: bold">1</span>,<span style="color: #0000DD; font-weight: bold">0</span>],[<span style="color: #0000DD; font-weight: bold">0</span>,<span style="color: #0000DD; font-weight: bold">1</span>],[<span style="color: #0000DD; font-weight: bold">1</span>,<span style="color: #0000DD; font-weight: bold">1</span>]];
-    Y <span style="color: #333333">=</span> [[<span style="color: #0000DD; font-weight: bold">0</span>],[<span style="color: #0000DD; font-weight: bold">1</span>],[<span style="color: #0000DD; font-weight: bold">1</span>],[<span style="color: #0000DD; font-weight: bold">0</span>]]
-
-    <span style="color: #888888"># Train with plots</span>
-    net<span style="color: #333333">.</span>trainWithPlots(X,Y,learning_rate<span style="color: #333333">=</span><span style="color: #6600EE; font-weight: bold">0.2</span>,intervals<span style="color: #333333">=</span><span style="color: #0000DD; font-weight: bold">1000</span>,way<span style="color: #333333">=</span><span style="background-color: #fff0f0">&#39;thres&#39;</span>)
-
-    <span style="color: #888888"># Store, load, print weights</span>
-    net<span style="color: #333333">.</span>storeWeights(<span style="background-color: #fff0f0">&#39;weights/XOR.txt&#39;</span>,comment<span style="color: #333333">=</span><span style="background-color: #fff0f0">&#39;XOR DATA&#39;</span>)
-    net<span style="color: #333333">.</span>loadWeights(<span style="background-color: #fff0f0">&#39;weights/XOR.txt&#39;</span>)
-    net<span style="color: #333333">.</span>printWeights()
-
-    <span style="color: #888888"># test XOR data</span>
-    net<span style="color: #333333">.</span>testBatch(X,Y,verbose<span style="color: #333333">=</span><span style="color: #007020">True</span>)
-
-    <span style="color: #888888"># Predict Data</span>
-    net<span style="color: #333333">.</span>predictProb([<span style="color: #0000DD; font-weight: bold">0</span>,<span style="color: #0000DD; font-weight: bold">0</span>]) <span style="color: #888888"># predict probability</span>	</pre></div>
-
 	
 	
  </section>
@@ -235,6 +209,5 @@ body {background-color: white;}
   </section>
   
 
-	
 </body>
 </html>
