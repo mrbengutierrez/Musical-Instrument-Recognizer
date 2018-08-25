@@ -109,7 +109,7 @@ neuralnet_01.py is a large neuralnet
 <html>
 <body>
 
-  <section id="Contributors">
+  <section>
     <header><h2>Contributors</h2></header>
     <i><strong>AKA The Instrumental Specialists</strong> </i>
   
@@ -174,27 +174,7 @@ neuralnet_01.py is a large neuralnet
    <p>
    Please open api.py to see the Application Program Interface for the Musical Instrument Decoder software. Please look at the demos in main to learn how to use the code. The demos will be replicated below.
    </p>
-	
-	
  </section>
- 
-  <section>
-    <header><h2>Abstract</h2></header>
-      <p>
-	
-      </p>
-  </section>
-  
-  <section>	
-    <header><h2>Introduction</h2></header>
-      <p>
- 
-      </p>
-  
-    <p>
-   
-    </p>
-  </section>
 
 </body>
 </html>
