@@ -164,7 +164,7 @@
   pre-emphasis filter (a=filter coefficient - 0.95 or 0.97)
   </u></b></p>
   
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/eqn1_24.PNG" alt="Pre-Emphasis Equation">
+  <img src="images/26_eqn1.PNG" alt="Pre-Emphasis Equation">
   
   <p>
   After apply a pre-emphasizing filter, we split the signal into separate time frames. The frequency of the signal changes over time, and by splitting the data into time frames we can can capture this additional frequency content.
@@ -173,7 +173,9 @@
   <p>
   Next, we applied a hamming window to each of the time frames. The FFT assumes that the signal is infinitely periodic. If the ends of the time signal do not match up, the signal will contain some additional high frequency noise not presence in the original signal. The hamming window helps correct that by bringing the ends of the time signal closer together. 
   </p>
-
+  
+  <img src="images/27_eqn2.PNG" alt="Hamming Window">
+  
   <p>
   Next we took the FFT of each frame to get the frequency content for each frame. Next we took the spectral density for each time frame. This describes the distribution of power of each of the frequency components in the signal. 
   </p>
@@ -182,10 +184,14 @@
   power spectrum (N typically 256 or 512)
   </p>
   
+  <img src="images/28_eqn3.PNG" alt="Power Equation">  
+  
   <p>
   In our next step, we created filter banks using triangular filter in order to transform the frequencies the spectral density to their corresponding frequency bands. We used the Mel-scale because it distinguishes higher frequency stronger than lower frequencies. Once we applied the filter bank across each of the power frames obtained a spectrogram with frequency along one axis and time along another axis. The equations below are the triangular filters applied to each of the power frames.
   </p>
-  
+ 
+  <img src="images/29_eqn4.PNG" alt="Filter bank Equations">
+ 
   <p>
   We then applied the discrete time cosine transform (DCT). The DCT helps to decorrelate the mel-frequency cepstral ceofficients (MFCCs). We chose to use the lower 12 MFCCs because higher coefficients represent fast changes in frequency between two adjacent time frames. The frequency content from musical instrument signal should not be changing rapidly between time frames.
   </p>
@@ -219,10 +225,10 @@
   Cost Function
   </u></b></p>
   
-  <b><i>J(t) = (y[i] - a[i])<sup>2</sup></i></b>
+  <img src="Musical-Instrument-Decoder/images/30_eqn5.PNG" alt="Cost Equation">
   
   <p>
-    <i>J</i>: Cost of weight matrix <i>t</i><br>
+    <i>J</i>: Cost of weight matrix <i>theta</i><br>
 	<i>y[i]</i>: Target values of layer <i>i</i><br>
 	<i>a[i]</i>: Activation values of layer <i>i</i>
   </p>
@@ -323,7 +329,7 @@
 	Mitra, Vikramjit, et al. <q>Robust Features in Deep-Learning-Based Speech Recognition.</q> <i>New Era for Robust Speech Recognition</i>, 2017, pp. 187 to 217., doi:10.1007/978-3-319-64680-0_8.
 	</p></li>
 	<li><p>
-	Yoshioka, T., and M.j.f. Gales. <q>Environmentally Robust ASR Front-End for Deep Neural Network Acoustic Models.</q> <i>Computer Speech & Language</i>, vol. 31, no. 1, 2014, pp. 65 to 86., sdoi:10.1016/j.csl.2014.11.008.
+	Yoshioka, T., and M.j.f. Gales. <q>Environmentally Robust ASR Front-End for Deep Neural Network Acoustic Models.</q> <i>Computer Speech & Language</i>, vol. 31, no. 1, 2014, pp. 65 to 86., doi:10.1016/j.csl.2014.11.008.
 	</p></li>
   </ol>
   
@@ -331,4 +337,3 @@
   
 
   
-s
