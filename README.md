@@ -31,7 +31,8 @@ neuralnet_01.py is a large neuralnet
 
 # Musical-Instrument-Decoder ##
 
-### Contributors AKA **The Instrumental Specialists** ###
+### Contributors###
+* AKA The Instrumental Specialists *
 * Ben Gutierrez
     * Wrote all project code, including:
 	    * preprocess.py
@@ -105,8 +106,78 @@ neuralnet_01.py is a large neuralnet
 )
 
 
+<dl>
+  <dt>Definition list</dt>
+  <dd>Is something people use sometimes.</dd>
 
+  <dt>Markdown in HTML</dt>
+  <dd>Does *not* work **very** well. Use HTML <em>tags</em>.</dd>
+</dl>
 
+```html
+<html>
+<head>
+<style>
+body {background-color: powderblue;}
+h2   {color: blue;}
+#p    {color: red;}
+</style>
+</head>
+<body>
+
+  <h2>Contributors</h2>
+  <i> AKA The Instrumental Specialists </i>
+  <h3>Ben Gutierrez</h3>
+    <ul>   
+      <li>Wrote all project code, including:
+	    <ul>
+	      <li>preprocess.py</li>
+		  <li>neuralnet.py</li>
+		  <li>note_sorter.py</li>
+		  <li>api.py</li>
+		</ul>
+      </li>
+	  <li>Talked about preprocessing in final presentation</li>
+	  <li>Wrote about preprocessing and neural network in final paper</li>
+	  <li>Maintains the project for future updates</li>
+	</ul>
+  <ul>
+    <li><em>Ellen Mak</em></li>
+      <li>Contributed substantially to final presentation
+	    <ul>
+	      <li>Answered all class questions</li>
+		  <li>Wrote the PowerPoint talking notes</li>
+		</ul>
+	  </li>
+	  <li>Trained and tested instrumental data
+	    <ul>
+	      <li>Tuned neural network parameters to get a good model for the data</li>
+		  <li>Generated plots of models of interest</li>
+		</ul>
+	  </li>
+	  <li>Wrote about training and testing the data in the final paper
+	    <ul>
+	      <li>Also formatted all plots, reference, and style in latex NIPS format</li>
+		</ul>
+	  </li>
+    <li><em>Rohan Pahwa</em></li>
+      <li>Contributed to final presentation
+	    <ul>
+	      <li>Talked about overall process, dataset, and introduction</li>
+		</ul>
+	  </li>
+      <li>Wrote introduction and abstract for final paper</li>
+	  <li>Trained and tested notes data
+	    <ul>
+	      <li>Tuned neural network parameters to get a good model for the data</li>
+		  <li>Generated plots of models of interest</li>
+		</ul>
+	  </li>
+  </ul>
+  
+</body>
+</html>
+```
 
 
 
