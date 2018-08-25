@@ -1,13 +1,11 @@
 
-  <!--
-  <h2>Table of Contents</h2>
-    <ol>
-	  <li><a href="#Contributors"><b>Contributors</b></a></li>
-    </ol>
+<h2>Table of Contents</h2>
+  <ol>
+	<li><a href="#Contributors"><b>Contributors</b></a></li>
+  </ol>
   
-    <h2 id="Contributors">Contributors</h2>
-    <i><strong>AKA The Instrumental Specialists</strong> </i>
-	-->
+<h2 id="Contributors">Contributors</h2>
+<i><strong>AKA The Instrumental Specialists</strong> </i>
   
 <h3><strong>Ben Gutierrez</strong></h3>
 <i>Massachusetts Institute of Technology</i>
