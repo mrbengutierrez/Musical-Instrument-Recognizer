@@ -369,14 +369,21 @@ def main():
     #trainXor()
 
     # Example 2 (Preprocess + NeuralNet)
-    trainInstruments()
+    test6Instruments()
+
+    # Example 3 (Preprocess + NeuralNet
+    test10Instruments()
+    
+    # Example 3 (Preprocess + NeuralNet)
+    testNotes()
+
 
 
 def trainXor():
     """Training NeuralNet to learn the boolean XOR function"""
     
     # Initialize Neural Network with tanh activation function,
-    # with with an input layer of size 2, one hidden layer of size 2,
+    # with an input layer of size 2, one hidden layer of size 2,
     # and one output layer of size 1
     net = NeuralNetwork([2,2,1],'tanh')
 
@@ -385,7 +392,7 @@ def trainXor():
     Y = [[0],[1],[1],[0]]
 
     # Train with plots
-    net.trainWithPlots(X,Y,learning_rate=0.2,intervals=1000,way='thres')
+    net.trainWithPlots(X,Y,learning_rate=0.2,intervals=2000,way='thres')
 
     # Store, load, print weights
     net.storeWeights('weights/XOR.txt',comment='XOR DATA')
@@ -398,10 +405,66 @@ def trainXor():
     # Predict Data
     net.predictProb([0,0]) # predict probability
 
-def trainInstruments():
+def train10Instruments():
     """Uses Preprocess to convert the audio data into mel-frequency cepstral coefficients.
         Feeds these coefficients into NeuralNet.
-        Three instruments are used in this example: bassoon
+        Ten instruments are used in this example
+    """
+    # Preprocess Training Data
+    P = Preprocess()
+    #P.processData('preprocessed/instr_train_10.txt',directory='instr_train_10',way='mfcc',opt = [2048])
+    P.loadData('preprocessed/instr_train_10.txt') #Load preprocessed data from file, since net has been trained
+    X, Y = P.getXY()
+    input_size = P.getInputLength()
+    output_size = P.getOutputLength()
+
+    # Train Neural Net
+    net = NeuralNetwork([input_size,100,output_size],activeFn='sigmoid')
+    net.trainWithPlots(X,Y,learning_rate=1,intervals = 100,way='max')
+    net.storeWeights('weights/instr_train_10.txt')
+    #net.loadWeights('weights/instr_train_10.txt') # Load weights from file, since net has been trained
+    
+    # Preprocess Testing Data
+    Q = Preprocess()
+    Q.processData('preprocessed/instr_test_10.txt',directory='instr_test_10',way='mfcc',opt=[2048])
+    #Q.loadData('preprocessed/instr_test_10.txt') # Load weights from file, since net has been trained
+    tX, tY = Q.getXY()
+
+    # Test testing data
+    net.testBatch(tX,tY)
+
+def train6Instruments():
+    """Uses Preprocess to convert the audio data into mel-frequency cepstral coefficients.
+        Feeds these coefficients into NeuralNet.
+        Six instruments are used in this example
+    """
+    # Preprocess Training Data
+    P = Preprocess()
+    #P.processData('preprocessed/instr_train_06.txt',directory='instr_train_06',way='mfcc',opt = [2048])
+    P.loadData('preprocessed/instr_test_06.txt') #Load preprocessed data from file, since net has been trained
+    X, Y = P.getXY()
+    input_size = P.getInputLength()
+    output_size = P.getOutputLength()
+
+    # Train Neural Net
+    net = NeuralNetwork([input_size,100,output_size],activeFn='sigmoid')
+    #net.trainWithPlots(X,Y,learning_rate=0.1,intervals = 75,way='max')
+    #net.storeWeights('weights/instr_train_06.txt')
+    net.loadWeights('weights/instr_train_06.txt') # Load weights from file, since net has been trained
+    
+    # Preprocess Testing Data
+    Q = Preprocess()
+    #Q.processData('preprocessed/instr_test_06.txt',directory='instr_test_06',way='mfcc',opt=[2048])
+    Q.loadData('preprocessed/instr_test_06.txt') # Load weights from file, since net has been trained
+    tX, tY = Q.getXY()
+
+    # Test testing data
+    net.testBatch(tX,tY)
+
+def trainNotes():
+    """Uses Preprocess to convert the audio data into mel-frequency cepstral coefficients.
+        Feeds these coefficients into NeuralNet.
+        19 instruments were used to generate all the notes
     """
     # Preprocess Training Data
     P = Preprocess()
@@ -412,11 +475,11 @@ def trainInstruments():
     output_size = P.getOutputLength()
 
     # Train Neural Net
-    net = NeuralNetwork([input_size,100,output_size],'sigmoid')
+    net = NeuralNetwork([input_size,100,output_size],activeFn='sigmoid')
+    net.trainWithPlots(X,Y,learning_rate=1,intervals = 200,way='max')
     net.storeWeights('weights/notes_train_19.txt')
     #net.loadWeights('weights/notes_train_19.txt') # Load weights from file, since net has been trained
-    net.trainWithPlots(X,Y,learning_rate=1,intervals = 10,way='max')
-
+    
     # Preprocess Testing Data
     Q = Preprocess()
     Q.processData('preprocessed/notes_test_19.txt',directory='notes_test_19',way='mfcc',opt=[2048])
@@ -425,6 +488,66 @@ def trainInstruments():
 
     # Test testing data
     net.testBatch(tX,tY)
+
+def test6Instruments():
+    """Uses Preprocess to convert the audio data into mel-frequency cepstral coefficients.
+        Feeds these coefficients into NeuralNet.
+        Six instruments are used in this example
+    """
+    # Get preprocessed training data
+    P = Preprocess()
+    P.loadData('preprocessed/instr_test_06.txt') #Load preprocessed data from file, since net has been trained
+    X, Y = P.getXY()
+    input_size = P.getInputLength()
+    output_size = P.getOutputLength()
+
+    # Load weights for neural net
+    net = NeuralNetwork([input_size,100,output_size],activeFn='sigmoid')
+    net.loadWeights('weights/instr_train_06.txt') # Load weights from file, since net has been trained
+
+    # Test testing data
+    print('Testing 6 Instruments Recognition')
+    net.testBatch(X,Y)
+
+def test10Instruments():
+    """Uses Preprocess to convert the audio data into mel-frequency cepstral coefficients.
+        Feeds these coefficients into NeuralNet.
+        Ten instruments are used in this example
+    """
+    # Get preprocessed training data
+    P = Preprocess()
+    P.loadData('preprocessed/instr_test_10.txt') #Load preprocessed data from file, since net has been trained
+    X, Y = P.getXY()
+    input_size = P.getInputLength()
+    output_size = P.getOutputLength()
+
+    # Load weights for neural net
+    net = NeuralNetwork([input_size,100,output_size],activeFn='sigmoid')
+    net.loadWeights('weights/instr_train_10.txt') # Load weights from file, since net has been trained
+
+    # Test testing data
+    print('Testing 10 Instruments Recognition')
+    net.testBatch(X,Y)
+
+def testNotes():
+    """Uses Preprocess to convert the audio data into mel-frequency cepstral coefficients.
+        Feeds these coefficients into NeuralNet.
+        19 instruments were used to generate all the notes
+    """
+    # Get preprocessed training data
+    P = Preprocess()
+    P.loadData('preprocessed/notes_test_19.txt') #Load preprocessed data from file, since net has been trained
+    X, Y = P.getXY()
+    input_size = P.getInputLength()
+    output_size = P.getOutputLength()
+
+    # Load weights for neural net
+    net = NeuralNetwork([input_size,100,output_size],activeFn='sigmoid')
+    net.loadWeights('weights/notes_train_19.txt') # Load weights from file, since net has been trained
+
+    # Test testing data
+    print('Testing Pitch Recognizition')
+    net.testBatch(X,Y)
     
 if __name__ == '__main__':
     main()

@@ -28,7 +28,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import neuralnet_02 as NN
+import neuralnet as NN
 import numpy as np
 import os
 import glob
