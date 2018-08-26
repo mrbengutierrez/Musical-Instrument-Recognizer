@@ -366,7 +366,7 @@ class NeuralNetwork(NN.NeuralNetwork):
 
 def main():
     # Example 1 (NeuralNet)
-    #trainXor()
+    trainXor()
 
     # Example 2 (Preprocess + NeuralNet)
     test6Instruments()
