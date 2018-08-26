@@ -1,4 +1,4 @@
-<h1>Musical Instrument Decoder</h1>
+<h1>Musical Instrument Recognizer</h1>
 
 <h2>Table of Contents</h2>
   <ol>
