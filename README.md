@@ -373,7 +373,7 @@
     <li>Contributed substantially to final presentation
       <ul>
 	    <li>Talked about training and testing</li>
-	    <li>Answered all class questions</li>
+	    <li>Wrote down answers to class questions</li>
 	    <li>Wrote the PowerPoint talking notes</li>
 	   </ul>
     </li>
