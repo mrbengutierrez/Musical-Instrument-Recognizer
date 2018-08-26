@@ -52,7 +52,7 @@
   Training Code 6 Instruments (Update: 08/26/2018)
   </u></b></p>
   <p>
-  Instruments: bassoon, cor anglais, flute, guitar, oboe, and tuba
+  Instruments: bassoon, cor anglais, flute, guitar, oboe, and tuba <br>Sampling Rate: 8000 Hz
   </p>
   
   <img src="images/73_06instr_sigmoid.png" alt="6 Instruments Testing">
@@ -69,7 +69,7 @@
   Training Code 10 Instruments (Update: 08/26/2018)
   </u></b></p>
   <p>
-  Instruments: bassoon, cello, cor anglais, flute, guitar, oboe, saxophone, trombone, trumpet, and tuba
+  Instruments: bassoon, cello, cor anglais, flute, guitar, oboe, saxophone, trombone, trumpet, and tuba <br>Sampling Rate: 8000 Hz
   </p>
   
   <img src="images/77_10instr_sigmoid.png" alt="10 Instruments Testing">
