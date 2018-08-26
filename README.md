@@ -38,15 +38,15 @@
   XOR Example Code
   </u></b></p>
   
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/31_xor_code.PNG" alt="XOR Example Code"> 
+  <img src="images/31_xor_code.PNG" alt="XOR Example Code"> 
   
   <p><b><u>
   XOR Example Output
   </u></b></p>
   
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/32_xor_output.PNG" alt="XOR Example Code">
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/33_xor_output.PNG" alt="XOR Example Code">
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/34_xor_output.PNG" alt="XOR Example Code">
+  <img src="images/32_xor_output.PNG" alt="XOR Example Code">
+  <img src="images/33_xor_output.PNG" alt="XOR Example Code">
+  <img src="images/34_xor_output.PNG" alt="XOR Example Code">
 
   <p><b><u>
   Training Code 6 Instruments (Update: 08/26/2018)
@@ -55,15 +55,15 @@
   Instruments: bassoon, cor anglais, flute, guitar, oboe, and tuba
   </p>
   
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/73_06instr_sigmoid.PNG" alt="6 Instruments Testing">
+  <img src="images/73_06instr_sigmoid.png" alt="6 Instruments Testing">
   
   <p><b><u>
   Output for 6 Instruments (Testing Accuracy: 90.0%)
   </u></b></p>
 
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/74_06instr_sigmoid.PNG" alt="6 Instruments Testing">
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/75_06instr_sigmoid.PNG" alt="6 Instruments Testing">
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/76_06instr_sigmoid.PNG" alt="6 Instruments Testing">    
+  <img src="images/74_06instr_sigmoid.png" alt="6 Instruments Testing">
+  <img src="images/75_06instr_sigmoid.png" alt="6 Instruments Testing">
+  <img src="images/76_06instr_sigmoid.png" alt="6 Instruments Testing">    
   
   <p><b><u>
   Training Code 10 Instruments (Update: 08/26/2018)
@@ -72,15 +72,15 @@
   Instruments: bassoon, cello, cor anglais, flute, guitar, oboe, saxophone, trombone, trumpet, and tuba
   </p>
   
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/77_10instr_sigmoid.PNG" alt="10 Instruments Testing">
+  <img src="images/77_10instr_sigmoid.png" alt="10 Instruments Testing">
   
   <p><b><u>
   Output for 10 Instruments (Testing Accuracy: 69.3%)
   </u></b></p>
 
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/78_10instr_sigmoid.PNG" alt="10 Instruments Testing">
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/79_10instr_sigmoid.PNG" alt="10 Instruments Testing">
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/80_10instr_sigmoid.PNG" alt="10 Instruments Testing">
+  <img src="images/78_10instr_sigmoid.png" alt="10 Instruments Testing">
+  <img src="images/79_10instr_sigmoid.png" alt="10 Instruments Testing">
+  <img src="images/80_10instr_sigmoid.png" alt="10 Instruments Testing">
   
 <h2 id="abstract">Abstract</h2>
   <p>
@@ -152,7 +152,7 @@
   Pre-Emphasis Filter (a=filter coefficient - 0.95 or 0.97)
   </u></b></p>
   
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/26_eqn1.PNG" alt="Pre-Emphasis Filters">
+  <img src="images/26_eqn1.PNG" alt="Pre-Emphasis Filters">
   
   <p>
   After apply a pre-emphasizing filter, we split the signal into separate time frames. The frequency of the signal changes over time, and by splitting the data into time frames we can can capture this additional frequency content.
@@ -166,7 +166,7 @@
   Hamming Window
   </u></b></p>  
   
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/27_eqn2.PNG" alt="Hamming Window">
+  <img src="images/27_eqn2.PNG" alt="Hamming Window">
   
   <p>
   Next we took the FFT of each frame to get the frequency content for each frame. We then took the spectral density for each time frame. The following equation describes the distribution of power for each of the frequency components in the signal. 
@@ -176,7 +176,7 @@
   Power Spectrum Equation (N typically 256 or 512)
   </u></b></p>
   
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/28_eqn3.PNG" alt="Power Spectrum Equation">  
+  <img src="images/28_eqn3.PNG" alt="Power Spectrum Equation">  
   
   <p>
   In our next step, we created filter banks using triangular filters in order to transform the frequencies in the spectral density to their corresponding frequency bands. We used the Mel-scale because it distinguishes higher frequency stronger than lower frequencies. Once we applied the filter bank across each of the power frames obtained in the spectrogram with frequency along one axis and time along another axis. The equations below are the triangular filters applied to each of the power frames.
@@ -186,7 +186,7 @@
   Filter Bank Equations
   </u></b></p>
   
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/29_eqn4.PNG" alt="Filter Bank Equations">
+  <img src="images/29_eqn4.PNG" alt="Filter Bank Equations">
  
   <p>
   We then applied the discrete time cosine transform (DCT). The DCT helps to decorrelate the mel-frequency cepstral ceofficients (MFCCs). We chose to use the lower 12 MFCCs because higher coefficients represent fast changes in frequency between two adjacent time frames. The frequency content from musical instrument signals should not be changing rapidly between time frames.
@@ -200,7 +200,7 @@
   The final step of pre-processing was to normalize and regularize the MFCCs. Regularization was accomplished by subtracting the mean of MFCCS for each time row. Normalization was accomplished by dividing the MFCCS by the max coefficient for each time row. By normalizing our data we insured that our inputs into our neural network would be in the range between [-1:1].
   </p>
 
-<h3 id="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/neural network">Neural Network</h3>
+<h3 id="neural network">Neural Network</h3>
   <p>
   We used a fully connected artificial neural net (ANN) as our choice of machine learning algorithm. We chose to use an ANN because of its popularity in image classification problems. An image can be thought of as a two-dimensional signal, which is similar to the concept of MFCCS with both time and frequency labels for each coefficient. 
   </p>
@@ -209,7 +209,7 @@
   Figure 1: Example of neural network structure
   </p>
   
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/08_neuralnet.PNG" alt="Cost Function">
+  <img src="images/08_neuralnet.PNG" alt="Cost Function">
 
   <p>
   We also were not certain if the variation between instruments or notes was due to a linear combination among features. If it happened to be the case that the the variation among instruments or notes was due to a linear combinations of the features we would have used multivariate regression. In our log based FFT method, the features were the logs of the FFT components, whereas in the MFCC method the features were the coefficients themselves. In both methods, it is hard to determine whether or not the output variables are linear combinations of the features.
@@ -227,7 +227,7 @@
   Cost Function
   </u></b></p>
   
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/30_eqn5.PNG" alt="Cost Function">
+  <img src="images/30_eqn5.PNG" alt="Cost Function">
   
   <p>
     <i>J</i>: Cost of weight matrix <i>theta</i><br>
@@ -254,7 +254,7 @@
   Figure 2: Cost function from only taking the Fast Fourier Transform and downsampling.
   </p>  
   
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/39_cost_fn.PNG" alt="Cost Function">
+  <img src="images/39_cost_fn.PNG" alt="Cost Function">
   
   <p>
   After getting these results, we decided that we needed to change our preprocessing methods. Instead of just taking the Fast Fourier Transform, we also took the Mel-Frequency Cepstral Coefficients. Inputting 3 instruments (cello, flute, and saxophone), our neural network (learning rate=1, intervals=100, activation function=sigmoid) had 36 input nodes, 100 nodes in the hidden layer, and 3 output nodes. After training the preprocessed instrument data, we were able to get a 97.1% training accuracy with a desirable graph shown below. After testing our test data, we were able to obtain a testing accuracy of 86.7%. 
@@ -264,7 +264,7 @@
   Figure 3: Training accuracy after taking the MFCC
   </p>
 
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/72_accuracy_2.PNG" alt="MFCC Accuracy">
+  <img src="images/72_accuracy_2.png" alt="MFCC Accuracy">
   
 <h3 id="instrument number">Increasing the Number of Instruments</h3> 
   <p>
@@ -324,7 +324,7 @@
   Figure 5: Training Accuracy using cello, clarinet, flute, saxophone, and tuba with 50 intervals, learning rate of 0.01, and activation function of sigmoid.
   </p>
   
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/40_tuba_accuracy.PNG" alt="Tuba Accuracy">
+  <img src="images/40_tuba_accuracy.png" alt="Tuba Accuracy">
 
 <h3 id="pitch">Pitch Training and Testing</h3>    
   <p>
@@ -335,13 +335,13 @@
   Figure 6: Training Accuracy for two pitches (B and F)
   </p>
   
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/44_2notesBF_accuracy.PNG" alt="Two Notes Accuracy">
+  <img src="images/44_2notesBF_accuracy.png" alt="Two Notes Accuracy">
 
   <p>
   Figure 7: Training Accuracy for three pitches (B,C, and F)
   </p>
   
-  <img src="https://github.com/mrbengutierrez/Musical-Instrument-Decoder/blob/master/images/45_3note_BCF_accuracy.PNG" alt="Three Notes Accuracy">
+  <img src="images/45_3note_BCF_accuracy.png" alt="Three Notes Accuracy">
 
 <h2 id="conclusion">Conclusion</h2>  
   <p>
