@@ -354,7 +354,7 @@
 <h4><strong>Ben Gutierrez</strong></h4>
 <i>Massachusetts Institute of Technology</i>
   <ul>   
-    <li>Wrote all project code, including:
+    <li>Wrote the project code, including:
 	  <ul>
 	    <li>preprocess.py</li>
 		<li>neuralnet.py</li>
