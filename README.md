@@ -31,7 +31,7 @@
  
 <h2 id="code">Code</h2>
   <p>
-    Please open api.py to see the Application Program Interface for the Musical Instrument Decoder software. Please look at the demos in the main function in api.py to learn how to use the code. The demos will be replicated below.
+    Please open api.py to see the Application Program Interface for the Musical Instrument Recognition software. Please look at the demos in the main function in api.py to learn how to use the code. The demos will be replicated below.
   </p>
 
   <p><b><u>
